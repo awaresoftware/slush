@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.3
 status: completed
 last_updated: "2026-10-01T17:50:00+02:00"
-state_head: 2143078575bca54d5f8a164ff845af0cd38f77d7
+state_head: 0cf5257344c5a5378cf809f69e8fe6b25a8a2fcc
 milestone_name: Easy Installation
 progress:
   total_phases: 6
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 Milestone v1.3 Easy Installation shipped 2026-03-29.
 All 6 phases (17-22) complete, 9 plans, 14 requirements validated.
 
-Last activity: 2026-10-01 - Completed quick task 261001-rd1: Fix forced password change screen not redirecting after password update
+Last activity: 2026-10-01 - Completed quick task 261001-rd2: Fix mandatory password change silently failing (middleware 302'd Livewire's hashed update endpoint)
 
 ## Decisions Affecting Current Work
 
@@ -60,6 +60,7 @@ Last activity: 2026-10-01 - Completed quick task 261001-rd1: Fix forced password
 | 14 | Audit wire:navigate coverage; close profile verification resend redirect gap | 2026-09-30 | da3a592 | — |
 | 261001-578 | Auth pages follow the user's saved theme/accent via guest appearance cookies | 2026-10-01 | cf2774e | [261001-578-make-all-auth-pages-adapt-to-user-select](./quick/261001-578-make-all-auth-pages-adapt-to-user-select/) |
 | 261001-rd1 | Fix forced password change screen not redirecting after password update | 2026-10-01 | 2192ee6 | [261001-rd1-fix-forced-password-change-screen-not-re](./quick/261001-rd1-fix-forced-password-change-screen-not-re/) |
+| 261001-rd2 | Fix mandatory password change silently failing (middleware 302'd Livewire's hashed update endpoint) | 2026-10-01 | 0cf5257 | — |
 
 ---
 
