@@ -195,29 +195,6 @@ it('setVolume clamps values above 100 to 100', function () {
         ->assertSet('volume', 100);
 });
 
-// ── currentTrack computed property ────────────────────────────────────────────
-
-it('currentTrack returns null when no track is loaded', function () {
-    $user = User::factory()->create();
-
-    $component = Livewire::actingAs($user)
-        ->test(AudioPlayer::class);
-
-    expect($component->instance()->currentTrack)->toBeNull();
-});
-
-it('currentTrack returns the loaded track model', function () {
-    $user = User::factory()->create();
-    $track = Track::factory()->create(['user_id' => $user->id, 'title' => 'My Track']);
-
-    $component = Livewire::actingAs($user)
-        ->test(AudioPlayer::class)
-        ->call('loadTrack', $track->id);
-
-    expect($component->instance()->currentTrack)->not->toBeNull()
-        ->and($component->instance()->currentTrack->title)->toBe('My Track');
-});
-
 // ── Cover art integration ─────────────────────────────────────────────────────
 
 it('loadTrack includes coverArtUrl when track has an album with cover art', function () {

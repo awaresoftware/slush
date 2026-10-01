@@ -1,35 +1,19 @@
 <?php
 
-use App\Concerns\AudioValidationRules;
-use App\Jobs\ExtractAudioMetadata;
 use App\Models\Album;
 use App\Models\Track;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
 {
-    use AudioValidationRules;
-    use WithFileUploads;
     use WithPagination;
-
-    /** @var array<int, TemporaryUploadedFile> */
-    public array $audioFiles = [];
-
-    public ?int $selectedAlbumId = null;
-
-    /** @var array<int, string> */
-    public array $duplicateWarnings = [];
 
     public string $search = '';
 
@@ -217,53 +201,6 @@ new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
         $this->resetPage('page');
         $this->resetPage('albums');
         $this->resetPage('artists');
-    }
-
-    /**
-     * Upload the selected audio files, create Track records, and dispatch metadata jobs.
-     */
-    public function save(): void
-    {
-        $this->validate($this->audioFileRules());
-
-        $user = Auth::user();
-        $uploadedTrackIds = [];
-
-        foreach ($this->audioFiles as $file) {
-            $hash = hash_file('sha256', $file->getRealPath());
-
-            if (Track::where('file_hash', $hash)->where('user_id', $user->id)->exists()) {
-                $this->duplicateWarnings[] = $file->getClientOriginalName();
-            }
-
-            $path = $file->store("music/{$user->id}", 'public');
-
-            $track = Track::create([
-                'user_id' => $user->id,
-                'album_id' => $this->selectedAlbumId,
-                'file_path' => $path,
-                'file_hash' => $hash,
-                'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-            ]);
-
-            ExtractAudioMetadata::dispatch($track);
-            $uploadedTrackIds[] = $track->id;
-        }
-
-        session([
-            'uploaded_track_ids' => $uploadedTrackIds,
-            'duplicate_warnings' => $this->duplicateWarnings,
-        ]);
-        $this->redirect(route('library.upload.summary'), navigate: false);
-    }
-
-    /**
-     * Get the authenticated user's albums for the album picker dropdown.
-     */
-    #[Computed]
-    public function userAlbums(): Collection
-    {
-        return Album::where('user_id', Auth::id())->orderBy('title')->get();
     }
 
     /**

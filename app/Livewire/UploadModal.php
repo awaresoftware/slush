@@ -2,21 +2,21 @@
 
 namespace App\Livewire;
 
-use App\Concerns\AudioValidationRules;
 use App\Jobs\ExtractAudioMetadata;
 use App\Models\Album;
 use App\Models\Track;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 
 class UploadModal extends Component
 {
-    use AudioValidationRules;
     use Toast;
     use WithFileUploads;
 
@@ -24,7 +24,7 @@ class UploadModal extends Component
 
     public bool $uploadComplete = false;
 
-    /** @var array<int, \Livewire\Features\SupportFileUploads\TemporaryUploadedFile> */
+    /** @var array<int, TemporaryUploadedFile> */
     public array $audioFiles = [];
 
     public ?int $selectedAlbumId = null;
@@ -57,7 +57,9 @@ class UploadModal extends Component
      */
     public function save(): void
     {
-        $this->validate($this->audioFileRules());
+        $this->validate([
+            'audioFiles.*' => 'file|mimes:mp3,wav,flac,m4a,aac,ogg|max:102400',
+        ]);
 
         $user = Auth::user();
         $uploadedTrackIds = [];
@@ -102,7 +104,7 @@ class UploadModal extends Component
         return Album::where('user_id', Auth::id())->orderBy('title')->get();
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('livewire.upload-modal');
     }

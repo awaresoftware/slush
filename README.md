@@ -1,6 +1,6 @@
 # SLUSH
 
-![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white) ![Livewire](https://img.shields.io/badge/Livewire-4-FB70A9?style=flat&logo=livewire&logoColor=white) ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white) ![Livewire](https://img.shields.io/badge/Livewire-4-FB70A9?style=flat&logo=livewire&logoColor=white) ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 
 A self-hosted music streaming server for your personal collection. Upload tracks, link local folders, and stream from any browser.
 

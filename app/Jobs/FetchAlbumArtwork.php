@@ -130,7 +130,7 @@ class FetchAlbumArtwork implements ShouldBeUnique, ShouldQueue
         return 'album-artwork-attempt:'.$albumId;
     }
 
-    public static function missKey(int $albumId): string
+    private static function missKey(int $albumId): string
     {
         return 'album-artwork-miss:'.$albumId;
     }

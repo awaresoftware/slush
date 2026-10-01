@@ -52,10 +52,9 @@ class AddToPlaylistModal extends Component
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if (! $playlist->tracks()->where('track_id', $track->id)->exists()) {
-            $maxPosition = $playlist->playlistTracks()->max('position') ?? -1;
-            $playlist->tracks()->attach($track->id, ['position' => $maxPosition + 1]);
-        }
+        abort_if($playlist->isSmart(), 422, 'Smart playlists choose their own tracks.');
+
+        $playlist->addTrack($track);
 
         $this->closeModal();
         $this->success("Added to {$playlist->name}");

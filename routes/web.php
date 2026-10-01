@@ -37,7 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('playlists/smart/create', 'pages::playlists.smart-editor')->name('playlists.smart.create');
     Route::livewire('playlists/smart/{playlist}/edit', 'pages::playlists.smart-editor')->name('playlists.smart.edit');
     Route::resource('playlists', PlaylistController::class);
-    Route::post('playlists/{playlist}/tracks', [PlaylistTrackController::class, 'store'])->name('playlist-tracks.store');
     Route::delete('playlists/{playlist}/tracks/{track}', [PlaylistTrackController::class, 'destroy'])->name('playlist-tracks.destroy');
     Route::get('stream/{track}', StreamController::class)->name('stream.track');
     Route::get('api/browse-directories', BrowseDirectoriesController::class)->name('browse-directories');

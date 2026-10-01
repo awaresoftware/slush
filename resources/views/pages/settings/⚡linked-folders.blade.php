@@ -222,14 +222,6 @@ new class extends Component {
     }
 
     /**
-     * Mark a folder as being tracked for scan completion (used in testing).
-     */
-    public function setScanning(int $folderId): void
-    {
-        $this->scanningFolderIds[] = $folderId;
-    }
-
-    /**
      * Poll for completed scans and show completion toast.
      */
     public function pollFolders(): void
@@ -394,18 +386,18 @@ new class extends Component {
 
                             <div class="mt-1 flex items-center gap-2">
                                 @if ($folder->status === FolderStatus::Scanning)
-                                    <span class="badge badge-warning badge-sm">
-                                        <span class="loading loading-spinner loading-xs mr-1"></span>
+                                    <x-mary-badge class="badge-warning badge-sm">
+                                        <x-mary-loading class="loading-spinner loading-xs mr-1" />
                                         @if ($folder->total_count > 0)
                                             {{ __('Scanning: :scanned / :total', ['scanned' => number_format($folder->scanned_count), 'total' => number_format($folder->total_count)]) }}
                                         @else
                                             {{ __('Scanning...') }}
                                         @endif
-                                    </span>
+                                    </x-mary-badge>
                                 @elseif ($folder->status === FolderStatus::Error)
-                                    <span class="px-2 badge badge-error badge-sm">{{ __('Error') }}</span>
+                                    <x-mary-badge value="{{ __('Error') }}" class="px-2 badge-error badge-sm" />
                                 @else
-                                    <span class="px-2 badge badge-success badge-sm">{{ __('Active') }}</span>
+                                    <x-mary-badge value="{{ __('Active') }}" class="px-2 badge-success badge-sm" />
                                 @endif
 
                                 <span class="text-xs text-base-content/60">
@@ -413,9 +405,7 @@ new class extends Component {
                                 </span>
 
                                 @if ($folder->unavailable_count > 0)
-                                    <span class="badge badge-warning badge-sm">
-                                        {{ $folder->unavailable_count }} {{ __('unavailable') }}
-                                    </span>
+                                    <x-mary-badge value="{{ $folder->unavailable_count }} {{ __('unavailable') }}" class="badge-warning badge-sm" />
                                 @endif
                             </div>
                         </div>
@@ -605,7 +595,7 @@ new class extends Component {
                     {{-- Directory list --}}
                     <div class="max-h-64 overflow-y-auto">
                         <div x-show="loading" class="flex items-center justify-center py-8">
-                            <span class="loading loading-spinner loading-md text-primary"></span>
+                            <x-mary-loading class="loading-spinner loading-md text-primary" />
                         </div>
 
                         <div x-show="error && ! loading" class="px-4 py-3">

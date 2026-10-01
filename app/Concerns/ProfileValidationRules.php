@@ -32,16 +32,6 @@ trait ProfileValidationRules
     }
 
     /**
-     * Get the validation rules used to validate user avatar uploads.
-     *
-     * @return array<int, string>
-     */
-    protected function avatarRules(): array
-    {
-        return ['nullable', 'image', 'max:2048'];
-    }
-
-    /**
      * Get the validation rules used to validate user names.
      *
      * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>

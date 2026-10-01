@@ -433,19 +433,6 @@ class AudioPlayer extends Component
     }
 
     /**
-     * Get the currently playing track model.
-     */
-    #[Computed]
-    public function currentTrack(): ?Track
-    {
-        if ($this->currentTrackId === null) {
-            return null;
-        }
-
-        return Track::with('album')->find($this->currentTrackId);
-    }
-
-    /**
      * The slice of the queue the panel shows: the current track plus the tracks
      * that follow it. The queue grows without bound as the library scrolls, so
      * this stays windowed rather than loading every track on each render.

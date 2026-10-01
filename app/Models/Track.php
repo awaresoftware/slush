@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Track extends Model
@@ -95,14 +94,6 @@ class Track extends Model
     }
 
     /**
-     * Get the counted listens of this track.
-     */
-    public function plays(): HasMany
-    {
-        return $this->hasMany(TrackPlay::class);
-    }
-
-    /**
      * Whether the owner has hearted this track.
      */
     public function isFavorited(): bool
@@ -124,14 +115,6 @@ class Track extends Model
     public function scopeUnavailable(Builder $query): Builder
     {
         return $query->where('is_available', false);
-    }
-
-    /**
-     * Scope a query to only include available tracks.
-     */
-    public function scopeAvailable(Builder $query): Builder
-    {
-        return $query->where('is_available', true);
     }
 
     /**

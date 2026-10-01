@@ -190,7 +190,7 @@ new class extends Component {
             @if ($twoFactorEnabled)
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <span class="badge badge-success">{{ __('Enabled') }}</span>
+                        <x-mary-badge value="{{ __('Enabled') }}" class="badge-success" />
                     </div>
 
                     <p class="text-sm">
@@ -212,7 +212,7 @@ new class extends Component {
             @else
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <span class="badge badge-error">{{ __('Disabled') }}</span>
+                        <x-mary-badge value="{{ __('Disabled') }}" class="badge-error" />
                     </div>
 
                     <p class="text-sm text-base-content/60">
@@ -293,7 +293,7 @@ new class extends Component {
                     <div class="relative w-64 overflow-hidden aspect-square rounded-box border border-separator">
                         @empty($qrCodeSvg)
                             <div class="absolute inset-0 flex items-center justify-center bg-base-200 animate-pulse">
-                                <span class="loading loading-spinner"></span>
+                                <x-mary-loading class="loading-spinner" />
                             </div>
                         @else
                             <div class="flex items-center justify-center h-full p-4">
@@ -341,7 +341,7 @@ new class extends Component {
                         <div class="flex items-stretch w-full rounded-box border border-separator">
                             @empty($manualSetupKey)
                                 <div class="flex items-center justify-center w-full p-3 bg-base-200">
-                                    <span class="loading loading-spinner loading-sm"></span>
+                                    <x-mary-loading class="loading-spinner loading-sm" />
                                 </div>
                             @else
                                 <input

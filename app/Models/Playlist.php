@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Playlist extends Model
 {
@@ -55,11 +54,17 @@ class Playlist extends Model
     }
 
     /**
-     * Get all playlist track pivot records for ordering.
+     * Add a track to the end of this playlist, ignoring tracks that are already in it.
      */
-    public function playlistTracks(): HasMany
+    public function addTrack(Track $track): void
     {
-        return $this->hasMany(PlaylistTrack::class)->orderBy('position');
+        if ($this->tracks()->where('track_id', $track->id)->exists()) {
+            return;
+        }
+
+        $maxPosition = PlaylistTrack::where('playlist_id', $this->id)->max('position') ?? -1;
+
+        $this->tracks()->attach($track->id, ['position' => $maxPosition + 1]);
     }
 
     /**

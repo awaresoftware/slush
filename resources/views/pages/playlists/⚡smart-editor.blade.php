@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\ResolveSmartPlaylist;
+use App\Http\Requests\PlaylistRequest;
 use App\Models\Playlist;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -115,8 +116,7 @@ new #[Layout('layouts.app')] class extends Component {
     public function save(): void
     {
         $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
+            ...PlaylistRequest::rules(),
             'matchMode' => ['required', 'in:all,any'],
             'sort' => ['required', 'in:'.implode(',', ResolveSmartPlaylist::SORTS)],
             'limit' => ['nullable', 'integer', 'min:1', 'max:'.ResolveSmartPlaylist::MAX_LIMIT],

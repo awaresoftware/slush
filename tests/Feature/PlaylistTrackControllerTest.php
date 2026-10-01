@@ -1,9 +1,12 @@
 <?php
 
+use App\Livewire\AddToPlaylistModal;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
@@ -12,9 +15,10 @@ test('user can add a track to their own playlist', function () {
     $playlist = Playlist::factory()->create(['user_id' => $user->id]);
     $track = Track::factory()->create(['user_id' => $user->id]);
 
-    $this->actingAs($user)
-        ->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id])
-        ->assertRedirect();
+    Livewire::actingAs($user)
+        ->test(AddToPlaylistModal::class)
+        ->call('openForTrack', $track->id)
+        ->call('addToPlaylist', $playlist->id);
 
     expect($playlist->fresh()->tracks)->toHaveCount(1);
     expect($playlist->tracks->first()->id)->toBe($track->id);
@@ -25,8 +29,15 @@ test('adding same track twice is idempotent', function () {
     $playlist = Playlist::factory()->create(['user_id' => $user->id]);
     $track = Track::factory()->create(['user_id' => $user->id]);
 
-    $this->actingAs($user)->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id]);
-    $this->actingAs($user)->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id]);
+    Livewire::actingAs($user)
+        ->test(AddToPlaylistModal::class)
+        ->call('openForTrack', $track->id)
+        ->call('addToPlaylist', $playlist->id);
+
+    Livewire::actingAs($user)
+        ->test(AddToPlaylistModal::class)
+        ->call('openForTrack', $track->id)
+        ->call('addToPlaylist', $playlist->id);
 
     expect($playlist->fresh()->tracks)->toHaveCount(1);
 });
@@ -37,20 +48,33 @@ test('user cannot add a track to another user playlist', function () {
     $playlist = Playlist::factory()->create(['user_id' => $owner->id]);
     $track = Track::factory()->create(['user_id' => $other->id]);
 
-    $this->actingAs($other)
-        ->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id])
-        ->assertForbidden();
+    expect(fn () => Livewire::actingAs($other)
+        ->test(AddToPlaylistModal::class)
+        ->call('openForTrack', $track->id)
+        ->call('addToPlaylist', $playlist->id))
+        ->toThrow(ModelNotFoundException::class);
 });
 
-test('user cannot add another users track to their playlist', function () {
-    $owner = User::factory()->create();
-    $other = User::factory()->create();
-    $playlist = Playlist::factory()->create(['user_id' => $owner->id]);
-    $track = Track::factory()->create(['user_id' => $other->id]);
+test('tracks are added in order with sequential positions', function () {
+    $user = User::factory()->create();
+    $playlist = Playlist::factory()->create(['user_id' => $user->id]);
+    $track1 = Track::factory()->create(['user_id' => $user->id]);
+    $track2 = Track::factory()->create(['user_id' => $user->id]);
+    $track3 = Track::factory()->create(['user_id' => $user->id]);
 
-    $this->actingAs($owner)
-        ->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id])
-        ->assertNotFound();
+    foreach ([$track1, $track2, $track3] as $i => $track) {
+        Livewire::actingAs($user)
+            ->test(AddToPlaylistModal::class)
+            ->call('openForTrack', $track->id)
+            ->call('addToPlaylist', $playlist->id);
+
+        unset($i);
+    }
+
+    $tracks = $playlist->fresh()->tracks;
+    expect($tracks)->toHaveCount(3);
+    expect($tracks->first()->id)->toBe($track1->id);
+    expect($tracks->last()->id)->toBe($track3->id);
 });
 
 test('user can remove a track from their own playlist', function () {
@@ -76,30 +100,4 @@ test('user cannot remove a track from another user playlist', function () {
     $this->actingAs($other)
         ->delete(route('playlist-tracks.destroy', [$playlist, $track]))
         ->assertForbidden();
-});
-
-test('track id is required when adding to playlist', function () {
-    $user = User::factory()->create();
-    $playlist = Playlist::factory()->create(['user_id' => $user->id]);
-
-    $this->actingAs($user)
-        ->post(route('playlist-tracks.store', $playlist), [])
-        ->assertSessionHasErrors('track_id');
-});
-
-test('tracks are added in order with sequential positions', function () {
-    $user = User::factory()->create();
-    $playlist = Playlist::factory()->create(['user_id' => $user->id]);
-    $track1 = Track::factory()->create(['user_id' => $user->id]);
-    $track2 = Track::factory()->create(['user_id' => $user->id]);
-    $track3 = Track::factory()->create(['user_id' => $user->id]);
-
-    $this->actingAs($user)->post(route('playlist-tracks.store', $playlist), ['track_id' => $track1->id]);
-    $this->actingAs($user)->post(route('playlist-tracks.store', $playlist), ['track_id' => $track2->id]);
-    $this->actingAs($user)->post(route('playlist-tracks.store', $playlist), ['track_id' => $track3->id]);
-
-    $tracks = $playlist->fresh()->tracks;
-    expect($tracks)->toHaveCount(3);
-    expect($tracks->first()->id)->toBe($track1->id);
-    expect($tracks->last()->id)->toBe($track3->id);
 });

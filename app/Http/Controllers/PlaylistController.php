@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ResolveSmartPlaylist;
-use App\Http\Requests\StorePlaylistRequest;
-use App\Http\Requests\UpdatePlaylistRequest;
+use App\Http\Requests\PlaylistRequest;
 use App\Models\Playlist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +46,7 @@ class PlaylistController extends Controller
     /**
      * Store a newly created playlist in storage.
      */
-    public function store(StorePlaylistRequest $request): RedirectResponse
+    public function store(PlaylistRequest $request): RedirectResponse
     {
         $playlist = Playlist::create([
             'user_id' => Auth::id(),
@@ -94,7 +93,7 @@ class PlaylistController extends Controller
     /**
      * Update the specified playlist in storage.
      */
-    public function update(UpdatePlaylistRequest $request, Playlist $playlist): RedirectResponse
+    public function update(PlaylistRequest $request, Playlist $playlist): RedirectResponse
     {
         $this->authorizePlaylist($playlist);
 
@@ -117,15 +116,5 @@ class PlaylistController extends Controller
         return redirect()
             ->route('playlists.index')
             ->with('success', 'Playlist deleted.');
-    }
-
-    /**
-     * Abort with 403 if the authenticated user does not own the playlist.
-     */
-    protected function authorizePlaylist(Playlist $playlist): void
-    {
-        if ($playlist->user_id !== Auth::id()) {
-            abort(403);
-        }
     }
 }

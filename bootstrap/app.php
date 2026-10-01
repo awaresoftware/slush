@@ -10,7 +10,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
-        health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Honour X-Forwarded-* from the sapolski nginx proxy that terminates
@@ -18,11 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // for requests that arrived over https.
         $middleware->trustProxies(at: [
             '192.168.13.126',
-        ]);
-
-        $middleware->alias([
-            'require.no-users' => RequireNoUsers::class,
-            'force.password.change' => ForcePasswordChange::class,
         ]);
 
         $middleware->appendToGroup('web', [

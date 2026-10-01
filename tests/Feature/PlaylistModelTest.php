@@ -4,6 +4,7 @@ use App\Models\Playlist;
 use App\Models\PlaylistTrack;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -26,18 +27,27 @@ test('playlist has many tracks via pivot', function () {
     expect($playlist->tracks->first()->id)->toBe($track->id);
 });
 
-test('playlist has many playlist track records', function () {
+test('playlist addTrack appends with sequential positions', function () {
+    $user = User::factory()->create();
+    $playlist = Playlist::factory()->create(['user_id' => $user->id]);
+
+    foreach (range(1, 3) as $i) {
+        $track = Track::factory()->create(['user_id' => $user->id]);
+        $playlist->addTrack($track);
+    }
+
+    expect($playlist->tracks)->toHaveCount(3);
+});
+
+test('playlist addTrack ignores a track that is already in it', function () {
     $user = User::factory()->create();
     $playlist = Playlist::factory()->create(['user_id' => $user->id]);
     $track = Track::factory()->create(['user_id' => $user->id]);
 
-    PlaylistTrack::create([
-        'playlist_id' => $playlist->id,
-        'track_id' => $track->id,
-        'position' => 0,
-    ]);
+    $playlist->addTrack($track);
+    $playlist->addTrack($track);
 
-    expect($playlist->playlistTracks)->toHaveCount(1);
+    expect(PlaylistTrack::where('playlist_id', $playlist->id)->count())->toBe(1);
 });
 
 test('playlist track belongs to playlist and track', function () {
@@ -70,5 +80,5 @@ test('playlist unique constraint prevents duplicate tracks', function () {
     PlaylistTrack::create(['playlist_id' => $playlist->id, 'track_id' => $track->id, 'position' => 0]);
 
     expect(fn () => PlaylistTrack::create(['playlist_id' => $playlist->id, 'track_id' => $track->id, 'position' => 1]))
-        ->toThrow(\Illuminate\Database\QueryException::class);
+        ->toThrow(QueryException::class);
 });

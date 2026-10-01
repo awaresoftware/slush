@@ -130,9 +130,13 @@ it('rejects manual track changes on smart playlists', function () {
     $track = Track::factory()->create(['user_id' => $user->id]);
     $playlist = smartPlaylist($user, ['rules' => [['field' => 'favorited', 'op' => 'is_true']]]);
 
-    $this->actingAs($user)
-        ->post(route('playlist-tracks.store', $playlist), ['track_id' => $track->id])
+    Livewire::actingAs($user)
+        ->test(AddToPlaylistModal::class)
+        ->call('openForTrack', $track->id)
+        ->call('addToPlaylist', $playlist->id)
         ->assertStatus(422);
+
+    expect($playlist->fresh()->tracks)->toHaveCount(0);
 });
 
 it('redirects the classic edit page to the smart editor', function () {

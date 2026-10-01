@@ -1,12 +1,12 @@
-# Contributing to Rekodo
+# Contributing to Slush
 
-Thanks for considering contributing to Rekodo! This document covers development setup, coding conventions, and pull request guidelines.
+Thanks for considering contributing to Slush! This document covers development setup, coding conventions, and pull request guidelines.
 
 ## Development Setup
 
 ### Prerequisites
 
-- PHP 8.2+
+- PHP 8.4+
 - Composer
 - Node.js 18+
 - npm

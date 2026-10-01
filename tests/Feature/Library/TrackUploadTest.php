@@ -1,9 +1,11 @@
 <?php
 
 use App\Jobs\ExtractAudioMetadata;
+use App\Livewire\UploadModal;
 use App\Models\Album;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +29,7 @@ it('extract audio metadata job handles missing file gracefully', function () {
 
 it('extract audio metadata job implements ShouldQueue', function () {
     expect(ExtractAudioMetadata::class)
-        ->toImplement(\Illuminate\Contracts\Queue\ShouldQueue::class);
+        ->toImplement(ShouldQueue::class);
 });
 
 it('extract audio metadata job accepts a track in constructor', function () {
@@ -60,7 +62,7 @@ it('library page renders an upload button', function () {
         ->assertSee('Upload');
 });
 
-// ── Upload action ────────────────────────────────────────────────────────────
+// ── Upload action (via livewire:upload-modal) ────────────────────────────────
 
 it('upload action creates track records from uploaded files', function () {
     Storage::fake('public');
@@ -70,7 +72,7 @@ it('upload action creates track records from uploaded files', function () {
     $file = UploadedFile::fake()->create('my-song.mp3', 100, 'audio/mpeg');
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file])
         ->call('save');
 
@@ -91,14 +93,14 @@ it('upload action dispatches ExtractAudioMetadata job for each uploaded file', f
     $file2 = UploadedFile::fake()->create('track-two.mp3', 100, 'audio/mpeg');
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file1, $file2])
         ->call('save');
 
     Queue::assertPushed(ExtractAudioMetadata::class, 2);
 });
 
-it('upload action redirects to upload summary route after processing', function () {
+it('upload action sets uploadComplete without redirecting after processing', function () {
     Storage::fake('public');
     Queue::fake();
 
@@ -106,10 +108,11 @@ it('upload action redirects to upload summary route after processing', function 
     $file = UploadedFile::fake()->create('song.mp3', 100, 'audio/mpeg');
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file])
         ->call('save')
-        ->assertRedirect(route('library.upload.summary'));
+        ->assertSet('uploadComplete', true)
+        ->assertNoRedirect();
 });
 
 it('upload action rejects files with invalid mime types', function () {
@@ -120,7 +123,7 @@ it('upload action rejects files with invalid mime types', function () {
     $file = UploadedFile::fake()->create('document.pdf', 100, 'application/pdf');
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file])
         ->call('save')
         ->assertHasErrors(['audioFiles.*']);
@@ -141,7 +144,7 @@ it('upload action adds duplicate warning when file hash already exists for user'
     ]);
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file])
         ->call('save')
         ->assertSet('duplicateWarnings', ['song.mp3'])
@@ -164,7 +167,7 @@ it('upload action does not add duplicate warning for different user with same ha
     ]);
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('audioFiles', [$file])
         ->call('save')
         ->assertSet('duplicateWarnings', []);
@@ -179,7 +182,7 @@ it('upload action passes selected album id to created track', function () {
     $file = UploadedFile::fake()->create('song.mp3', 100, 'audio/mpeg');
 
     Livewire::actingAs($user)
-        ->test('pages::library.index')
+        ->test(UploadModal::class)
         ->set('selectedAlbumId', $album->id)
         ->set('audioFiles', [$file])
         ->call('save');

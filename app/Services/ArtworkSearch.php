@@ -193,7 +193,7 @@ class ArtworkSearch
      * Cache key for one provider query, matching the album-artwork-miss:*
      * convention the automatic backfill already uses.
      */
-    public static function cacheKey(string $provider, string $query): string
+    private static function cacheKey(string $provider, string $query): string
     {
         return 'artwork-search:'.$provider.':'.Str::lower(trim((string) preg_replace('/\s+/', ' ', $query)));
     }

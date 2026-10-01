@@ -26,10 +26,10 @@
                     <h1 class="flex items-center gap-2 text-title-1">
                         {{ $playlist->name }}
                         @if ($playlist->isSmart())
-                            <span class="badge badge-sm gap-1 border-0 bg-primary/12 text-primary">
+                            <x-mary-badge class="badge-sm gap-1 border-0 bg-primary/12 text-primary">
                                 <x-mary-icon name="o-sparkles" class="size-3" />
                                 {{ __('Smart') }}
-                            </span>
+                            </x-mary-badge>
                         @endif
                     </h1>
 

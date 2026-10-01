@@ -4,15 +4,10 @@ use App\Audio\WaveformPeaks;
 use App\Jobs\FetchAlbumArtwork;
 use App\Models\Album;
 use App\Models\Track;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
 
 Artisan::command(
     'albums:fetch-missing-artwork {--limit=0 : Maximum albums to process} {--sync : Run inline instead of queueing}',

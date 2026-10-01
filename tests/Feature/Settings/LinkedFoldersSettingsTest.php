@@ -368,7 +368,7 @@ test('rescan completion toast includes unavailable count', function () {
     // Simulate poll detecting folder transitioned from scanning to active by having
     // a previously tracked scanning folder ID in scanningFolderIds
     $component = Livewire::test('pages::settings.linked-folders')
-        ->call('setScanning', $folder->id)
+        ->set('scanningFolderIds', [$folder->id])
         ->call('pollFolders');
 
     $jsEffects = $component->effects['xjs'] ?? [];
