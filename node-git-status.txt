@@ -1,0 +1,44 @@
+ M .planning/REQUIREMENTS.md
+ M .planning/ROADMAP.md
+M  .planning/STATE.md
+ M .planning/config.json
+A  .planning/phases/10-settings-migration/10-00-SUMMARY.md
+ D .planning/v1.0-MILESTONE-AUDIT.md
+ M AGENTS.md
+ M CLAUDE.md
+ M boost.json
+ M resources/views/pages/auth/confirm-password.blade.php
+ M resources/views/pages/auth/two-factor-challenge.blade.php
+ M resources/views/pages/auth/verify-email.blade.php
+ M "resources/views/pages/settings/two-factor/\342\232\241recovery-codes.blade.php"
+ M "resources/views/pages/settings/\342\232\241appearance.blade.php"
+ M "resources/views/pages/settings/\342\232\241delete-user-form.blade.php"
+ M "resources/views/pages/settings/\342\232\241password.blade.php"
+ M "resources/views/pages/settings/\342\232\241profile.blade.php"
+ M "resources/views/pages/settings/\342\232\241two-factor.blade.php"
+?? .claude/agents/
+?? .claude/commands/
+?? .claude/get-shit-done/
+?? .claude/gsd-file-manifest.json
+?? .claude/hooks/
+?? .claude/package.json
+?? .claude/settings.json
+?? .claude/settings.local.json
+?? .claude/skills/tailwindcss-development/
+?? .opencode/skill/tailwindcss-development/
+?? .planning/PROJECT_SUMMARY.md
+?? .planning/codebase/
+?? .planning/debug/play-all-button-broken.md
+?? app/Views/
+?? do-commit.js
+?? fix-gsd-path.sh
+?? git-log-tmp.txt
+?? git-status-out.txt
+?? gitlog.tmp.txt
+?? gsd-wrapper.sh
+?? gsd.cmd
+?? gsd.js
+?? gsd.ps1
+?? resources/views/components/auth/
+?? test-gsd.js
+?? tmp-git-status.txt

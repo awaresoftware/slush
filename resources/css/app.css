@@ -1,0 +1,851 @@
+@import 'tailwindcss';
+
+@plugin "daisyui" {
+    themes: false;
+}
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";
+
+/* =============================================================================
+   Themes
+
+   Role mapping, applied consistently across every surface:
+     base-200  canvas   page background
+     base-100  surface  sidebar, cards, player bar, modals
+     base-300  raised   hover fills, wells, inputs, segmented-control track
+     base-content        all text (with /60 /35 /20 opacity steps)
+     primary   accent   set by the accent layer further down, never here
+   ========================================================================== */
+
+@plugin "daisyui/theme" {
+    name: "porcelain";
+    default: true;
+    color-scheme: light;
+
+    --color-base-100: #ffffff;
+    --color-base-200: #f5f5f7;
+    --color-base-300: #e9e9ee;
+    --color-base-content: #1d1d1f;
+    --color-primary: #e1051e;
+    --color-primary-content: #ffffff;
+    --color-secondary: #6e6e73;
+    --color-secondary-content: #ffffff;
+    --color-accent: #e1051e;
+    --color-accent-content: #ffffff;
+    --color-neutral: #1d1d1f;
+    --color-neutral-content: #ffffff;
+    --color-info: #006ce2;
+    --color-info-content: #ffffff;
+    --color-success: #218039;
+    --color-success-content: #ffffff;
+    --color-warning: #9a6700;
+    --color-warning-content: #ffffff;
+    --color-error: #d70015;
+    --color-error-content: #ffffff;
+
+    --radius-selector: 0.375rem;
+    --radius-field: 0.625rem;
+    --radius-box: 0.875rem;
+    --depth: 0;
+    --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+    name: "graphite";
+    prefersdark: true;
+    color-scheme: dark;
+
+    --color-base-100: #1f1f22;
+    --color-base-200: #161618;
+    --color-base-300: #2c2c30;
+    --color-base-content: #f5f5f7;
+    --color-primary: #ff3b52;
+    --color-primary-content: #161618;
+    --color-secondary: #98989d;
+    --color-secondary-content: #161618;
+    --color-accent: #ff3b52;
+    --color-accent-content: #161618;
+    --color-neutral: #2c2c30;
+    --color-neutral-content: #f5f5f7;
+    --color-info: #0a84ff;
+    --color-info-content: #ffffff;
+    --color-success: #30d158;
+    --color-success-content: #06230f;
+    --color-warning: #ff9f0a;
+    --color-warning-content: #241500;
+    --color-error: #ff453a;
+    --color-error-content: #ffffff;
+
+    --radius-selector: 0.375rem;
+    --radius-field: 0.625rem;
+    --radius-box: 0.875rem;
+    --depth: 0;
+    --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+    name: "midnight";
+    color-scheme: dark;
+
+    --color-base-100: #0c0c0e;
+    --color-base-200: #000000;
+    --color-base-300: #1c1c1f;
+    --color-base-content: #f2f2f7;
+    --color-primary: #ff3b52;
+    --color-primary-content: #161618;
+    --color-secondary: #98989d;
+    --color-secondary-content: #000000;
+    --color-accent: #ff3b52;
+    --color-accent-content: #161618;
+    --color-neutral: #1c1c1f;
+    --color-neutral-content: #f2f2f7;
+    --color-info: #0a84ff;
+    --color-info-content: #ffffff;
+    --color-success: #30d158;
+    --color-success-content: #06230f;
+    --color-warning: #ff9f0a;
+    --color-warning-content: #241500;
+    --color-error: #ff453a;
+    --color-error-content: #ffffff;
+
+    --radius-selector: 0.375rem;
+    --radius-field: 0.625rem;
+    --radius-box: 0.875rem;
+    --depth: 0;
+    --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+    name: "catppuccin-frappe";
+    color-scheme: dark;
+
+    --color-base-100: #232634;
+    --color-base-200: #292c3c;
+    --color-base-300: #303446;
+    --color-base-content: #c6d0f5;
+    --color-primary: #e78284;
+    --color-primary-content: #232634;
+    --color-secondary: #babbf1;
+    --color-secondary-content: #232634;
+    --color-accent: #e78284;
+    --color-accent-content: #232634;
+    --color-neutral: #414559;
+    --color-neutral-content: #c6d0f5;
+    --color-info: #85c1dc;
+    --color-info-content: #232634;
+    --color-success: #a6d189;
+    --color-success-content: #232634;
+    --color-warning: #e5c890;
+    --color-warning-content: #232634;
+    --color-error: #e78284;
+    --color-error-content: #232634;
+
+    --radius-selector: 0.375rem;
+    --radius-field: 0.625rem;
+    --radius-box: 0.875rem;
+    --depth: 0;
+    --noise: 0;
+}
+
+/* =============================================================================
+   Design tokens
+   Declared with literal values so Tailwind generates utilities
+   (border-separator, bg-chrome, shadow-1, ease-out-ios, rounded-art …).
+   The per-theme blocks below re-point the variables; utilities follow.
+   ========================================================================== */
+
+@theme {
+    --font-sans:
+        -apple-system, BlinkMacSystemFont, ui-sans-serif, 'SF Pro Text', 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+    /* Materials — overridden per theme */
+    --color-separator: rgba(0, 0, 0, 0.08);
+    --color-chrome: rgba(255, 255, 255, 0.72);
+    --color-fill: rgba(0, 0, 0, 0.06);
+
+    /* Scrims that sit over artwork. Artwork is arbitrary, so these stay the
+       same in every theme rather than following the palette. */
+    --color-overlay: rgba(0, 0, 0, 0.45);
+    --color-on-overlay: rgb(255, 255, 255);
+
+    /* Waveform envelope. Read by the canvas painter in app.js, so a theme
+       switch repaints the waveform without touching any markup. */
+    --wf-idle: rgba(0, 0, 0, 0.16);
+    --wf-buffered: rgba(0, 0, 0, 0.3);
+    --wf-played: var(--color-primary);
+
+    /* Artwork corner radii */
+    --radius-art: 0.375rem;
+    --radius-art-lg: 0.625rem;
+
+    /* Elevation — only where something genuinely floats */
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.16);
+
+    /* Motion */
+    --ease-out-ios: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Material values per theme. Unlayered so they win over daisyUI's @layer base.
+   `:root` covers Auto/system-light; the media query covers Auto/system-dark. */
+:root,
+[data-theme='porcelain'] {
+    --color-separator: rgba(0, 0, 0, 0.08);
+    --color-chrome: rgba(255, 255, 255, 0.72);
+    --color-fill: rgba(0, 0, 0, 0.06);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --color-separator: rgba(255, 255, 255, 0.1);
+        --color-chrome: rgba(31, 31, 34, 0.72);
+        --color-fill: rgba(255, 255, 255, 0.08);
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24);
+        --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.32);
+        --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.48);
+        --wf-idle: rgba(255, 255, 255, 0.2);
+        --wf-buffered: rgba(255, 255, 255, 0.34);
+        --wf-played: var(--color-primary);
+    }
+}
+
+[data-theme='graphite'] {
+    --color-separator: rgba(255, 255, 255, 0.1);
+    --color-chrome: rgba(31, 31, 34, 0.72);
+    --color-fill: rgba(255, 255, 255, 0.08);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.32);
+    --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.48);
+    --wf-idle: rgba(255, 255, 255, 0.2);
+    --wf-buffered: rgba(255, 255, 255, 0.34);
+    --wf-played: var(--color-primary);
+}
+
+[data-theme='midnight'] {
+    --color-separator: rgba(255, 255, 255, 0.13);
+    --color-chrome: rgba(12, 12, 14, 0.72);
+    --color-fill: rgba(255, 255, 255, 0.1);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.64);
+    --wf-idle: rgba(255, 255, 255, 0.2);
+    --wf-buffered: rgba(255, 255, 255, 0.34);
+    --wf-played: var(--color-primary);
+}
+
+[data-theme='catppuccin-frappe'] {
+    --color-separator: rgba(198, 208, 245, 0.1);
+    --color-chrome: rgba(35, 38, 52, 0.72);
+    --color-fill: rgba(198, 208, 245, 0.08);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.32);
+    --shadow-3: 0 8px 32px rgba(0, 0, 0, 0.48);
+    --wf-idle: rgba(255, 255, 255, 0.2);
+    --wf-buffered: rgba(255, 255, 255, 0.34);
+    --wf-played: var(--color-primary);
+}
+
+/* =============================================================================
+   Accent layer
+
+   Each accent carries three harmonised variants; each theme context picks one.
+   Defaults on :root keep --color-primary valid when no data-accent is present.
+   Unlayered, so it overrides the theme blocks regardless of source order.
+
+   Every value below is derived, not eyeballed. In light themes the accent must
+   carry white label text AND stay legible as text on the canvas, so the iOS
+   hues are darkened until both clear WCAG AA. In dark themes the vivid hue is
+   kept — it has to work as accent-coloured text — and the label on accent fills
+   becomes near-black instead. Frappé's pastels already carry dark labels.
+   ========================================================================== */
+
+:root,
+[data-accent='music-red'] {
+    --accent-light: #e1051e;
+    --accent-dark: #ff3b52;
+    --accent-frappe: #e78284;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+[data-accent='blue'] {
+    --accent-light: #006ce2;
+    --accent-dark: #0a84ff;
+    --accent-frappe: #8caaee;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+[data-accent='purple'] {
+    --accent-light: #a53cda;
+    --accent-dark: #bf5af2;
+    --accent-frappe: #ca9ee6;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+/* A true magenta, not iOS systemPink: once darkened for AA, systemPink was
+   indistinguishable from Music Red in the picker. */
+[data-accent='pink'] {
+    --accent-light: #d70088;
+    --accent-dark: #ff5ec4;
+    --accent-frappe: #f4b8e4;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+[data-accent='orange'] {
+    --accent-light: #a46000;
+    --accent-dark: #ff9f0a;
+    --accent-frappe: #ef9f76;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+[data-accent='green'] {
+    --accent-light: #218039;
+    --accent-dark: #30d158;
+    --accent-frappe: #a6d189;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+[data-accent='mono'] {
+    --accent-light: #6e6e73;
+    --accent-dark: #c8c8cd;
+    --accent-frappe: #949cbb;
+    --on-accent-light: #ffffff;
+    --on-accent-dark: #161618;
+    --on-accent-frappe: #232634;
+}
+
+/* Contexts: bind the chosen accent variant to daisyUI's primary slots. */
+:root,
+[data-theme='porcelain'] {
+    --color-primary: var(--accent-light);
+    --color-primary-content: var(--on-accent-light);
+    --color-accent: var(--accent-light);
+    --color-accent-content: var(--on-accent-light);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --color-primary: var(--accent-dark);
+        --color-primary-content: var(--on-accent-dark);
+        --color-accent: var(--accent-dark);
+        --color-accent-content: var(--on-accent-dark);
+    }
+}
+
+[data-theme='graphite'],
+[data-theme='midnight'] {
+    --color-primary: var(--accent-dark);
+    --color-primary-content: var(--on-accent-dark);
+    --color-accent: var(--accent-dark);
+    --color-accent-content: var(--on-accent-dark);
+}
+
+[data-theme='catppuccin-frappe'] {
+    --color-primary: var(--accent-frappe);
+    --color-primary-content: var(--on-accent-frappe);
+    --color-accent: var(--accent-frappe);
+    --color-accent-content: var(--on-accent-frappe);
+}
+
+/* =============================================================================
+   Type ramp — the only sanctioned text sizes
+   ========================================================================== */
+
+@utility text-large-title {
+    font-size: 2rem;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+@utility text-title-1 {
+    font-size: 1.625rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+@utility text-title-2 {
+    font-size: 1.3125rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+@utility text-title-3 {
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+@utility text-body {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    font-weight: 400;
+}
+
+@utility text-body-emphasized {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    font-weight: 600;
+}
+
+@utility text-subhead {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+@utility text-footnote {
+    font-size: 0.75rem;
+    line-height: 1.35;
+    font-weight: 400;
+}
+
+@utility text-caption {
+    font-size: 0.6875rem;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* =============================================================================
+   Materials
+   ========================================================================== */
+
+/* Translucent chrome for bars, sidebar, sheets. Degrades to an opaque surface
+   where backdrop-filter is unsupported or the user asks for less transparency. */
+@utility surface-chrome {
+    background-color: var(--color-base-100);
+
+    @supports (backdrop-filter: blur(1px)) {
+        background-color: var(--color-chrome);
+        backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+        background-color: var(--color-base-100);
+        backdrop-filter: none;
+    }
+}
+
+/* Keeps light artwork from bleeding into a light canvas. */
+@utility artwork {
+    box-shadow: inset 0 0 0 1px var(--color-separator);
+}
+
+/* Selection fill and hover fill come free from the tokens above:
+   `bg-primary/12` for the macOS sidebar selection, `bg-fill` for hover. */
+
+/* Skeleton shimmer for known layouts. */
+@utility skeleton-block {
+    background-color: var(--color-base-300);
+    background-image: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--color-base-content) 6%, transparent),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: skeleton-sweep 1.4s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes skeleton-sweep {
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* Accent swatch. Carries its own data-accent; the theme context on an ancestor
+   (or on a theme-preview card) decides which of its three variants shows. */
+@utility accent-dot {
+    background-color: var(--accent-light);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .accent-dot {
+        background-color: var(--accent-dark);
+    }
+}
+
+[data-theme='graphite'] .accent-dot,
+[data-theme='midnight'] .accent-dot {
+    background-color: var(--accent-dark);
+}
+
+[data-theme='catppuccin-frappe'] .accent-dot {
+    background-color: var(--accent-frappe);
+}
+
+/* Now-playing equaliser, used in the queue panel. */
+@keyframes eq-bar {
+    0%,
+    100% {
+        transform: scaleY(0.35);
+    }
+    50% {
+        transform: scaleY(1);
+    }
+}
+
+@utility eq-bar {
+    transform-origin: bottom;
+    animation: eq-bar 0.9s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        transform: scaleY(0.6);
+    }
+}
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* Alpine removes this attribute on init; the rule hides anything marked
+       x-cloak until then, so modals and panels never flash pre-hydration. */
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        height: 100%;
+        scrollbar-color: color-mix(in srgb, var(--color-base-content) 25%, transparent) transparent;
+    }
+
+    /* daisyUI paints a background on :root, which stops the body's own
+       background from propagating to the canvas. The body therefore has to grow
+       with its content, or base-200 only covers the first viewport and daisyUI's
+       base-100 shows through below the fold as a lighter band. min-height, not
+       height: a definite height would pin the body to 100vh and reintroduce the
+       seam on any page taller than the screen. The layout's own min-h-screen
+       keeps it filling a short viewport. */
+    body {
+        min-height: 100%;
+        font-size: 0.9375rem;
+        line-height: 1.45;
+    }
+
+    *:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+    ::selection {
+        background-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--color-base-content) 20%, transparent);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in srgb, var(--color-base-content) 32%, transparent);
+    }
+
+    /* Durations, counts, track numbers and times align in columns. */
+    time,
+    [data-numeric] {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+/* =============================================================================
+   Queue docking
+
+   The queue panel stays `fixed`; at xl the shell reserves a gutter for it so it
+   sits beside the page instead of covering it. The audio player sets
+   `data-queue` on <html> while the queue is open, which is why this is keyed off
+   the document rather than a Blade class. --queue-gutter must match the panel's
+   own width (w-[360px]) so the bar's right edge lines up with it.
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+    html[data-queue='open'] {
+        --queue-gutter: 22.5rem;
+    }
+
+    html[data-queue='open'] #app-shell {
+        padding-right: var(--queue-gutter);
+    }
+
+    html[data-queue='open'] [data-test='player-bar'] {
+        right: var(--queue-gutter);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =============================================================================
+   Control primitives
+   Mary UI and daisyUI render the markup; these give them the Apple silhouette.
+   ========================================================================== */
+
+.label-text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--color-base-content) 60%, transparent);
+}
+
+.input,
+.textarea,
+.select {
+    background-color: var(--color-base-300);
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    transition: border-color 120ms var(--ease-out-ios);
+}
+
+.input,
+.select {
+    height: 2.75rem;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    color: color-mix(in srgb, var(--color-base-content) 35%, transparent);
+}
+
+.input:focus,
+.input:focus-within,
+.textarea:focus,
+.select:focus {
+    border-color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: -1px;
+}
+
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+    opacity: 0.4;
+}
+
+.input.input-error,
+.textarea.textarea-error {
+    border-color: var(--color-error);
+}
+
+.btn {
+    height: 2.75rem;
+    min-height: 2.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    border-radius: var(--radius-field);
+    transition:
+        background-color 120ms var(--ease-out-ios),
+        opacity 120ms var(--ease-out-ios);
+}
+
+.btn-sm {
+    height: 2.25rem;
+    min-height: 2.25rem;
+    font-size: 0.8125rem;
+}
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.4;
+}
+
+/* Capsule buttons for the primary actions (Play, Shuffle, Upload). */
+.btn-capsule {
+    border-radius: 9999px;
+    padding-inline: 1.25rem;
+}
+
+.badge {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+/* daisyUI leaves an unchecked checkbox borderless, which vanishes against the
+   surface; give it a visible hairline so it reads as a control. */
+.checkbox {
+    border: 1px solid color-mix(in srgb, var(--color-base-content) 35%, transparent);
+    border-radius: var(--radius-selector);
+}
+
+.checkbox:checked,
+.checkbox:focus-visible {
+    border-color: var(--color-primary);
+}
+
+/* Scrubber and volume slider.
+
+   A native range input keeps keyboard and screen-reader behaviour; the visible
+   track is drawn by sibling elements underneath, so we hide the browser's own
+   track and reveal the thumb only on hover or focus, the way iOS does. */
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.slider:disabled {
+    cursor: not-allowed;
+}
+
+.slider::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 1rem;
+}
+
+.slider::-moz-range-track {
+    background: transparent;
+    height: 1rem;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-top: 0.125rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-2);
+    opacity: 0;
+    transition: opacity 120ms var(--ease-out-ios);
+}
+
+.slider::-moz-range-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-2);
+    opacity: 0;
+    transition: opacity 120ms var(--ease-out-ios);
+}
+
+.slider:hover::-webkit-slider-thumb,
+.slider:focus-visible::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+.slider:hover::-moz-range-thumb,
+.slider:focus-visible::-moz-range-thumb {
+    opacity: 1;
+}
+
+.slider:focus-visible {
+    outline: none;
+}
+
+.slider:focus-visible ~ .slider-track {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 9999px;
+}
+
+/* Waveform variant.
+
+   The canvas paints its own progress fill, so the input is a control layer
+   only. It has to be full height: the base slider is 1rem tall, which inside a
+   taller waveform left the silhouette below that line unclickable and parked the
+   thumb at the top. The thumb is invisible so nothing floats over the shape,
+   which means the focus ring has to live on the input itself — the rule above
+   drops the outline and delegates it to a sibling track this component does not
+   have. */
+.slider-waveform {
+    height: 100%;
+}
+
+.slider-waveform::-webkit-slider-runnable-track,
+.slider-waveform::-moz-range-track {
+    height: 100%;
+}
+
+.slider-waveform:hover::-webkit-slider-thumb,
+.slider-waveform:focus-visible::-webkit-slider-thumb,
+.slider-waveform::-webkit-slider-thumb,
+.slider-waveform:hover::-moz-range-thumb,
+.slider-waveform:focus-visible::-moz-range-thumb,
+.slider-waveform::-moz-range-thumb {
+    opacity: 0;
+}
+
+.slider-waveform:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 9999px;
+}
+
+.toast {
+    z-index: 90;
+}
+
+.modal-box {
+    border-radius: var(--radius-box);
+    box-shadow: var(--shadow-3);
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+}

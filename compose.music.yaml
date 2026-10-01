@@ -1,0 +1,19 @@
+# -----------------------------------------------
+# Music Library Volume Mount (Optional)
+# -----------------------------------------------
+# To enable local music library linking in Docker:
+#
+#   1. Copy this file:  cp compose.music.yaml compose.override.yaml
+#   2. Set MUSIC_LIBRARY_PATH in your .env file to your host music folder path
+#   3. Restart:  ./vendor/bin/sail up -d
+#
+# Docker Compose automatically merges compose.override.yaml on every 'up'.
+# In the app, use container paths like /music/subfolder — not host paths.
+# -----------------------------------------------
+services:
+    laravel.test:
+        volumes:
+            - '${MUSIC_LIBRARY_PATH}:/music:ro'
+    worker:
+        volumes:
+            - '${MUSIC_LIBRARY_PATH}:/music:ro'
