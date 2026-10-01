@@ -29,7 +29,12 @@ class ForcePasswordChange
             return $next($request);
         }
 
-        if (str_contains($request->path(), 'livewire/update')) {
+        // Livewire requests must pass through untouched. Identifying them by URL
+        // path is a trap: the endpoint is a hashed prefix (livewire-<hash>/update),
+        // so a 'livewire/update' substring never matches and the client receives
+        // this redirect's HTML instead of JSON, failing the update silently.
+        // Livewire stamps every one of its own requests with X-Livewire.
+        if ($request->hasHeader('X-Livewire')) {
             return $next($request);
         }
 

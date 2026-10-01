@@ -2,7 +2,20 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+
+/**
+ * Resolve Livewire's POST update endpoint.
+ *
+ * Deliberately looked up from the router rather than hardcoded: the path
+ * carries a build-specific hash prefix (livewire-<hash>/update), which is
+ * exactly what made a path-substring check in the middleware silently wrong.
+ */
+function livewireUpdatePath(): string
+{
+    return Route::getRoutes()->getByName('default-livewire.update')->uri();
+}
 
 test('user with force_password_change is redirected to password page', function () {
     $user = User::factory()->forcePasswordChange()->create();
@@ -90,4 +103,31 @@ test('voluntary password change does not redirect', function () {
         ->call('updatePassword')
         ->assertHasNoErrors()
         ->assertNoRedirect();
+});
+
+/**
+ * The Livewire update request must never be redirected.
+ *
+ * This is a real HTTP request through the middleware stack, not Livewire's
+ * in-process test harness — the harness calls component methods directly and
+ * therefore never exercised ForcePasswordChange against the update endpoint.
+ * A redirect here answers the client's XHR with HTML, Livewire fails to parse
+ * it as JSON, and the action is dropped with no visible error to the user.
+ */
+test('livewire update requests are not redirected for a forced user', function () {
+    $user = User::factory()->forcePasswordChange()->create();
+
+    $response = $this->actingAs($user)
+        ->withHeaders(['X-Livewire' => true])
+        ->postJson('/'.livewireUpdatePath(), ['components' => []]);
+
+    expect($response->headers->get('Location'))->toBeNull();
+    expect($response->status())->not->toBe(302);
+});
+
+test('livewire update endpoint path is not matched by a livewire/update substring', function () {
+    // Guards the trap itself: if a future Livewire version ever moves the
+    // endpoint back to a bare 'livewire/update', this assertion documents that
+    // the header check still holds and the substring check would be redundant.
+    expect(livewireUpdatePath())->not->toContain('livewire/update');
 });
