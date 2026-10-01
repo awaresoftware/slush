@@ -6,11 +6,14 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
-new class extends Component {
+new class extends Component
+{
     use PasswordValidationRules;
 
     public string $current_password = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
 
     /**
@@ -33,11 +36,27 @@ new class extends Component {
             'password' => $validated['password'],
         ]);
 
-        if (Auth::user()->force_password_change) {
+        /**
+         * Read the flag before the update below clears it. The clear must be
+         * committed before the redirect is issued: the redirect is a
+         * client-side effect, so the browser's next GET to /dashboard re-runs
+         * ForcePasswordChange against the stored row.
+         *
+         * @var bool $wasForcedToChangePassword
+         */
+        $wasForcedToChangePassword = Auth::user()->force_password_change;
+
+        if ($wasForcedToChangePassword) {
             Auth::user()->update(['force_password_change' => false]);
         }
 
         $this->reset('current_password', 'password', 'password_confirmation');
+
+        if ($wasForcedToChangePassword) {
+            $this->redirectRoute('dashboard', navigate: true);
+
+            return;
+        }
 
         $this->dispatch('password-updated');
     }

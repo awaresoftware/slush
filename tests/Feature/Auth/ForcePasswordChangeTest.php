@@ -59,3 +59,35 @@ test('user with force_password_change is redirected from settings pages', functi
 
     $response->assertRedirect(route('user-password.edit'));
 });
+
+test('forced password change redirects to the dashboard', function () {
+    $user = User::factory()->forcePasswordChange()->create([
+        'password' => Hash::make('OldPassword123!'),
+    ]);
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.password')
+        ->set('current_password', 'OldPassword123!')
+        ->set('password', 'NewSecurePassword123!')
+        ->set('password_confirmation', 'NewSecurePassword123!')
+        ->call('updatePassword')
+        ->assertHasNoErrors()
+        ->assertRedirectToRoute('dashboard');
+
+    expect($user->fresh()->force_password_change)->toBeFalse();
+});
+
+test('voluntary password change does not redirect', function () {
+    $user = User::factory()->create([
+        'password' => Hash::make('OldPassword123!'),
+    ]);
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.password')
+        ->set('current_password', 'OldPassword123!')
+        ->set('password', 'NewSecurePassword123!')
+        ->set('password_confirmation', 'NewSecurePassword123!')
+        ->call('updatePassword')
+        ->assertHasNoErrors()
+        ->assertNoRedirect();
+});
