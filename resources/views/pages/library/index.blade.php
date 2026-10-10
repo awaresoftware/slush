@@ -1,11 +1,13 @@
 <?php
 
+use App\Livewire\AudioPlayer;
 use App\Models\Album;
 use App\Models\Track;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -42,14 +44,39 @@ new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
     public int $artistsPerPage = 12;
 
     /**
-     * The user's tracks for the current search, source filter and sort.
+     * The visible page of tracks for the current search, source filter and sort.
      */
     #[Computed]
     public function tracks(): LengthAwarePaginator
     {
+        return $this->trackQuery()->with('album')->paginate($this->perPage, ['*'], 'page');
+    }
+
+    /**
+     * Queue every available track matching the current filters and sort — not
+     * just the visible page — starting at the clicked one. Only ids are loaded,
+     * and a huge library is trimmed to the player's cap around the clicked track.
+     */
+    #[Renderless]
+    public function playFrom(int $trackId): void
+    {
+        $ids = $this->trackQuery()->where('is_available', true)->pluck('id')->all();
+        $index = array_search($trackId, $ids, true);
+
+        if ($index === false) {
+            return;
+        }
+
+        $this->dispatch('play-track', ...AudioPlayer::windowAround($ids, $index));
+    }
+
+    /**
+     * The user's tracks for the current search, source filter and sort.
+     */
+    private function trackQuery(): Builder
+    {
         return Track::query()
             ->where('user_id', Auth::id())
-            ->with('album')
             ->when($this->search, fn ($q) => $q->where(function ($q) {
                 $q->where('title', 'like', "%{$this->search}%")
                     ->orWhere('artist', 'like', "%{$this->search}%")
@@ -59,8 +86,7 @@ new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
             ->when($this->sourceFilter === 'local', fn ($q) => $q->local())
             ->when($this->sourceFilter === 'unavailable', fn ($q) => $q->unavailable())
             ->when($this->sourceFilter === 'favorites', fn ($q) => $q->favorited())
-            ->tap(fn ($q) => $this->applySort($q))
-            ->paginate($this->perPage, ['*'], 'page');
+            ->tap(fn ($q) => $this->applySort($q));
     }
 
     /**
@@ -265,6 +291,7 @@ new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
                         <x-ui.track-table
                             :tracks="$this->tracks"
                             :track-ids="$this->tracks->pluck('id')->all()"
+                            play-action="playFrom"
                         />
 
                         <div class="mt-4">{{ $this->tracks->onEachSide(1)->links(data: ['scrollTo' => '#library-lists']) }}</div>
@@ -344,6 +371,7 @@ new #[Layout('layouts.app')] #[Title('My Library')] class extends Component
                                 <x-ui.track-table
                                     :tracks="$this->tracks"
                                     :track-ids="$this->tracks->pluck('id')->all()"
+                                    play-action="playFrom"
                                 />
 
                                 <div class="my-4">{{ $this->tracks->onEachSide(1)->links(data: ['scrollTo' => '#library-lists']) }}</div>

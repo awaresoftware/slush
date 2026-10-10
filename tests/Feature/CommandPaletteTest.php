@@ -107,3 +107,15 @@ it('ranks most played tracks first', function () {
 
     expect($results['Tracks'][0]['label'])->toBe('Song Loved');
 });
+
+it('serves a full-page search that the mobile tab bar links to', function () {
+    $user = User::factory()->create();
+    Track::factory()->for($user)->create(['title' => 'Fastlove', 'artist' => 'George Michael']);
+
+    $this->actingAs($user)
+        ->get(route('search', ['q' => 'George']))
+        ->assertOk()
+        ->assertSee('data-test="search-input"', false)
+        ->assertSee('Fastlove')
+        ->assertSee('href="'.route('search').'"', false);
+});

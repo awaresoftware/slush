@@ -7,6 +7,7 @@
     'showArtist' => true,
     'showAlbum' => true,
     'playlist' => null,
+    'playAction' => null,
 ])
 
 @php
@@ -34,7 +35,14 @@
     $title = $row['title'];
     $number = $row['track_number'] ?? $index + 1;
     $queueIndex = $queueIndex ?? $index;
-    $playDispatch = "\$dispatch('play-track', { trackIds: {$ids}, index: {$queueIndex} })";
+    $duration = $row['duration'] === null
+        ? null
+        : intdiv($row['duration'], 60) . ':' . str_pad($row['duration'] % 60, 2, '0', STR_PAD_LEFT);
+    // A paginated list names a component action instead, so the server can queue
+    // every matching track rather than only the rows on this page.
+    $playDispatch = $playAction
+        ? "\$wire.{$playAction}({$row['id']})"
+        : "\$dispatch('play-track', { trackIds: {$ids}, index: {$queueIndex} })";
 @endphp
 
 <tr
@@ -91,10 +99,11 @@
         </td>
     @endif
 
-    {{-- Title --}}
-    <td class="py-2 pr-4">
+    {{-- Title. max-w-0 lets the cell absorb the spare width and truncate,
+         instead of pushing the row wider than a phone screen. --}}
+    <td class="py-2 pr-4 max-sm:w-full max-sm:max-w-0">
         <span class="flex items-center gap-2">
-            <span class="truncate text-body-emphasized">{{ $title }}</span>
+            <span class="min-w-0 truncate text-body-emphasized">{{ $title }}</span>
 
             @if ($row['source_type'] === 'local')
                 {{-- data-test is the hook the source-badge tests assert on, so a
@@ -107,12 +116,15 @@
             @endif
         </span>
 
-        {{-- The artist column is hidden on narrow screens, so keep it on the row --}}
-        @if ($showArtist)
-            <span class="block truncate text-footnote text-base-content/65 sm:hidden">
-                {{ $row['artist'] ?? __('Unknown Artist') }}
-            </span>
-        @endif
+        {{-- Phones drop the artist, album and duration columns, so the row
+             carries them as a second line instead. --}}
+        <span class="block truncate text-footnote text-base-content/65 sm:hidden" data-test="track-row-subline">
+            {{ implode(' · ', array_filter([
+                $showArtist ? ($row['artist'] ?? __('Unknown Artist')) : null,
+                $showAlbum ? $row['album_title'] : null,
+                $duration,
+            ])) }}
+        </span>
     </td>
 
     @if ($showArtist)
@@ -131,7 +143,15 @@
 
     @if ($showAlbum)
         <td class="hidden py-2 pr-4 text-body text-base-content/65 lg:table-cell">
-            <span class="block truncate">{{ $row['album_title'] ?? '—' }}</span>
+            @if (! empty($row['album_id']) && $row['album_title'])
+                <a
+                    href="{{ route('library.album.show', $row['album_id']) }}"
+                    wire:navigate
+                    class="block truncate transition-colors duration-150 hover:text-base-content hover:underline"
+                >{{ $row['album_title'] }}</a>
+            @else
+                <span class="block truncate">{{ $row['album_title'] ?? '—' }}</span>
+            @endif
         </td>
     @endif
 
@@ -160,18 +180,12 @@
         </span>
     </td>
 
-    <td class="py-2 pr-2 text-right">
-        <time class="text-footnote text-base-content/65 tabular-nums">
-            @if ($row['duration'] === null)
-                —
-            @else
-                {{ intdiv($row['duration'], 60) }}:{{ str_pad($row['duration'] % 60, 2, '0', STR_PAD_LEFT) }}
-            @endif
-        </time>
+    <td class="hidden py-2 pr-2 text-right sm:table-cell">
+        <time class="text-footnote text-base-content/65 tabular-nums">{{ $duration ?? '—' }}</time>
     </td>
 
     {{-- Trailing actions --}}
-    <td class="w-20 py-2">
+    <td class="w-20 py-2 max-sm:w-auto">
         <div class="flex items-center justify-end gap-0.5">
             @if (! $available)
                 <x-ui.icon-button
@@ -201,7 +215,7 @@
                     size="sm"
                     :label="'Add ' . $title . ' to playlist'"
                     x-on:click="$dispatch('open-add-to-playlist', { trackId: {{ $row['id'] }} })"
-                    class="opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100 max-sm:opacity-100"
+                    class="opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100 max-sm:hidden"
                     data-test="add-to-playlist-btn"
                 />
             @endif

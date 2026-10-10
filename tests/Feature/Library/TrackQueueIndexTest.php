@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\AudioPlayer;
+use App\Models\Album;
 use App\Models\Track;
 use App\Models\User;
 use Livewire\Livewire;
@@ -39,14 +40,16 @@ function dispatchedQueueIndexes(string $html): array
 it('numbers queue positions by available rows, not raw loop position', function () {
     $user = User::factory()->create();
 
+    $album = Album::factory()->create(['user_id' => $user->id]);
+
     $available = [
-        Track::factory()->create(['user_id' => $user->id, 'is_available' => true]),
-        Track::factory()->create(['user_id' => $user->id, 'is_available' => true]),
+        Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 1, 'is_available' => true]),
+        Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 3, 'is_available' => true]),
     ];
-    $missing = Track::factory()->create(['user_id' => $user->id, 'is_available' => false]);
+    $missing = Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 2, 'is_available' => false]);
 
     $indexes = dispatchedQueueIndexes(
-        Livewire::actingAs($user)->test('pages::library.index')->html()
+        $this->actingAs($user)->get(route('library.album.show', $album))->getContent()
     );
 
     // The unavailable row carries no play dispatch at all.
@@ -67,11 +70,13 @@ it('numbers queue positions by available rows, not raw loop position', function 
 it('dispatched queue position resolves to the clicked track', function () {
     $user = User::factory()->create();
 
-    $first = Track::factory()->create(['user_id' => $user->id, 'is_available' => true]);
-    $missing = Track::factory()->create(['user_id' => $user->id, 'is_available' => false]);
-    $last = Track::factory()->create(['user_id' => $user->id, 'is_available' => true]);
+    $album = Album::factory()->create(['user_id' => $user->id]);
 
-    $html = Livewire::actingAs($user)->test('pages::library.index')->html();
+    $first = Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 1, 'is_available' => true]);
+    $missing = Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 2, 'is_available' => false]);
+    $last = Track::factory()->create(['user_id' => $user->id, 'album_id' => $album->id, 'track_number' => 3, 'is_available' => true]);
+
+    $html = $this->actingAs($user)->get(route('library.album.show', $album))->getContent();
     $indexes = dispatchedQueueIndexes($html);
 
     // Whatever position the page rendered the last available track at, playing
@@ -86,4 +91,55 @@ it('dispatched queue position resolves to the clicked track', function () {
         ->call('loadQueue', [$first->id, $missing->id, $last->id], $index)
         ->assertSet('currentTrackId', $last->id)
         ->assertSet('queue', [$first->id, $last->id]);
+});
+
+it('library playFrom queues every matching track, not just the visible page', function () {
+    $user = User::factory()->create();
+
+    $tracks = collect(range(1, 20))->map(fn (int $n) => Track::factory()->create([
+        'user_id' => $user->id,
+        'title' => sprintf('Song %02d', $n),
+        'is_available' => true,
+    ]));
+    Track::factory()->create(['user_id' => $user->id, 'title' => 'Song 00 missing', 'is_available' => false]);
+    Track::factory()->create(['title' => 'Song 99 someone else']);
+
+    // Song 18 sits on page 2 (15 per page); the queue still spans all 20 in A-Z order.
+    Livewire::actingAs($user)
+        ->test('pages::library.index')
+        ->call('playFrom', $tracks[17]->id)
+        ->assertDispatched('play-track', trackIds: $tracks->pluck('id')->all(), index: 17);
+});
+
+it('library playFrom respects the active filter', function () {
+    $user = User::factory()->create();
+
+    $match = Track::factory()->create(['user_id' => $user->id, 'title' => 'Blue Monday', 'is_available' => true]);
+    Track::factory()->create(['user_id' => $user->id, 'title' => 'Red Alert', 'is_available' => true]);
+
+    Livewire::actingAs($user)
+        ->test('pages::library.index')
+        ->set('search', 'Blue')
+        ->call('playFrom', $match->id)
+        ->assertDispatched('play-track', trackIds: [$match->id], index: 0);
+});
+
+it('library playFrom ignores a track that is not in the list', function () {
+    $user = User::factory()->create();
+    Track::factory()->create(['user_id' => $user->id, 'is_available' => true]);
+    $foreign = Track::factory()->create(['is_available' => true]);
+
+    Livewire::actingAs($user)
+        ->test('pages::library.index')
+        ->call('playFrom', $foreign->id)
+        ->assertNotDispatched('play-track');
+});
+
+it('library rows call playFrom instead of embedding the page ids', function () {
+    $user = User::factory()->create();
+    $track = Track::factory()->create(['user_id' => $user->id, 'is_available' => true]);
+
+    $html = Livewire::actingAs($user)->test('pages::library.index')->html();
+
+    expect($html)->toContain("\$wire.playFrom({$track->id})");
 });

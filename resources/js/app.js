@@ -43,7 +43,7 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
-    Alpine.data('audioPlayer', (initialVolume) => ({
+    Alpine.data('audioPlayer', (initialVolume, streamUrlTemplate) => ({
         // Playback
         isPlaying: false,
         hasTrack: false,
@@ -63,6 +63,9 @@ document.addEventListener('alpine:init', () => {
         _playedSeconds: 0,
         _lastTime: 0,
         _playCounted: false,
+
+        // Set while onEnded's early start waits for nextTrack()'s player:load.
+        _advancing: false,
 
         // Volume
         volume: initialVolume,
@@ -256,10 +259,21 @@ document.addEventListener('alpine:init', () => {
             // never show the previous track's waveform for a frame.
             this.peaks = [];
 
-            audio.src = detail.url;
+            // onEnded may already have started this stream to skip the server
+            // round-trip; reassigning src would restart it and reopen the gap.
+            // An early start that failed is retried so onAudioError can report it.
+            const alreadyLoaded = this._advancing && !audio.error && audio.src === new URL(detail.url, location.href).href;
+            this._advancing = false;
+
+            if (alreadyLoaded) {
+                this.duration = audio.duration || 0;
+            } else {
+                audio.src = detail.url;
+            }
+
             audio.volume = this.isMuted ? 0 : this.volume / 100;
 
-            if (detail.autoplay !== false) {
+            if (detail.autoplay !== false && !(alreadyLoaded && !audio.paused)) {
                 audio.play().then(() => {
                     this.isPlaying = true;
                 }).catch(() => {
@@ -631,12 +645,49 @@ document.addEventListener('alpine:init', () => {
                 this.$dispatch('queue-running-low');
             }
 
-            if (this.hasNext || this.$wire.repeat === 'all') {
-                this.$wire.nextTrack();
+            const nextId = this.nextTrackId();
+
+            if (nextId === null) {
+                return;
             }
+
+            // Nothing from the next stream may count as a play of this track,
+            // and an error before player:load lands is left for onLoad's retry.
+            this._playCounted = true;
+            this._advancing = true;
+
+            // Start the next stream now, on the same element so iOS keeps
+            // playing with the screen locked, rather than after nextTrack()'s
+            // round-trip. Its player:load then only fills in the metadata.
+            audio.src = streamUrlTemplate.replace('__track__', nextId);
+            audio.play().then(() => { this.isPlaying = true; }).catch(() => {});
+
+            this.$wire.nextTrack();
+        },
+
+        /**
+         * The track nextTrack() will pick, mirroring its server-side rule.
+         */
+        nextTrackId() {
+            const queue = this.$wire.queue;
+            const idx = queue.indexOf(this.$wire.currentTrackId);
+
+            if (idx < 0) {
+                return null;
+            }
+
+            if (idx < queue.length - 1) {
+                return queue[idx + 1];
+            }
+
+            return this.$wire.repeat === 'all' ? queue[0] : null;
         },
 
         onAudioError() {
+            if (this._advancing) {
+                return;
+            }
+
             this.isPlaying = false;
 
             if (this.trackTitle) {

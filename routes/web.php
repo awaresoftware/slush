@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::livewire('profile/{user}', 'pages::profile.show')->name('profile.show');
+    Route::livewire('search', 'pages::search.index')->name('search');
     Route::livewire('library', 'pages::library.index')->name('library.index');
     Route::livewire('library/albums/{album}', 'pages::library.album-show')->name('library.album.show');
     Route::livewire('library/artists/{artist}', 'pages::library.artist-show')

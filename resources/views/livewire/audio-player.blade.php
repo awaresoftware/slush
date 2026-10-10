@@ -5,7 +5,7 @@
 @endphp
 
 <div
-    x-data="audioPlayer(@js($volume))"
+    x-data="audioPlayer(@js($volume), @js(route('stream.track', ['track' => '__track__'])))"
     x-init="init()"
     @keydown.space.window="togglePlayPause($event)"
     @keydown.arrow-right.window="$wire.nextTrack()"
@@ -431,7 +431,7 @@
         ></div>
 
         <div
-            class="surface-chrome absolute right-0 bottom-0 flex w-full flex-col border-separator shadow-3 max-sm:h-[72vh] max-sm:rounded-t-box max-sm:border-t sm:top-0 sm:w-[360px] sm:border-l lg:bottom-[72px]"
+            class="surface-chrome absolute right-0 bottom-0 flex w-full flex-col border-separator shadow-3 max-sm:h-[72vh] max-sm:rounded-t-box max-sm:border-t sm:top-0 sm:w-[360px] sm:border-l lg:bottom-[72px] xl:bottom-0"
             x-on:keydown.escape.window="queueOpen = false"
             x-transition:enter="transition ease-sheet duration-300"
             x-transition:enter-start="translate-y-full sm:translate-y-0 sm:translate-x-full"
@@ -556,7 +556,7 @@
         ></div>
 
         <div
-            class="surface-chrome absolute right-0 bottom-0 flex w-full flex-col border-separator shadow-3 max-sm:h-[72vh] max-sm:rounded-t-box max-sm:border-t sm:top-0 sm:w-[360px] sm:border-l lg:bottom-[72px]"
+            class="surface-chrome absolute right-0 bottom-0 flex w-full flex-col border-separator shadow-3 max-sm:h-[72vh] max-sm:rounded-t-box max-sm:border-t sm:top-0 sm:w-[360px] sm:border-l lg:bottom-[72px] xl:bottom-0"
             x-on:keydown.escape.window="lyricsOpen = false"
             x-transition:enter="transition ease-sheet duration-300"
             x-transition:enter-start="translate-y-full sm:translate-y-0 sm:translate-x-full"

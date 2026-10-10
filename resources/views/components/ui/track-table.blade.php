@@ -5,6 +5,7 @@
     'showArtist' => true,
     'showAlbum' => true,
     'playlist' => null,
+    'playAction' => null,
 ])
 
 @php
@@ -15,7 +16,7 @@
 
 <div class="overflow-x-auto">
     <table class="w-full">
-        <thead>
+        <thead class="max-sm:hidden">
             <tr class="border-b border-separator text-left">
                 <th class="{{ in_array($mode, ['library', 'smart'], true) ? 'w-14' : 'w-10' }} pb-2"></th>
                 <th class="pb-2 pr-4 text-caption text-base-content/45">{{ __('Title') }}</th>
@@ -29,7 +30,7 @@
                 @endif
 
                 <th class="w-9 pb-2"></th>
-                <th class="pb-2 pr-2 text-right text-caption text-base-content/45">{{ __('Duration') }}</th>
+                <th class="hidden pb-2 pr-2 text-right text-caption text-base-content/45 sm:table-cell">{{ __('Duration') }}</th>
                 <th class="w-20 pb-2"></th>
             </tr>
         </thead>
@@ -63,6 +64,7 @@
                     :show-artist="$showArtist"
                     :show-album="$showAlbum"
                     :playlist="$playlist"
+                    :play-action="$playAction"
                 />
             @endforeach
         </tbody>

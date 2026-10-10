@@ -662,3 +662,38 @@ it('leaves no modal open at rest, so the page stays scrollable', function () {
 
     expect($openModals)->toBeEmpty();
 });
+
+// ── queue cap ──────────────────────────────────────────────────────────────────
+
+it('windowAround leaves a list under the cap untouched', function () {
+    expect(AudioPlayer::windowAround([5, 6, 7], 1))->toBe(['trackIds' => [5, 6, 7], 'index' => 1]);
+});
+
+it('windowAround keeps MAX_QUEUE ids centred on the chosen track', function (int $index, int $expectedOffset) {
+    $ids = range(1, AudioPlayer::MAX_QUEUE + 10000);
+
+    $window = AudioPlayer::windowAround($ids, $index);
+
+    expect($window['trackIds'])->toHaveCount(AudioPlayer::MAX_QUEUE)
+        ->and($window['trackIds'][0])->toBe($expectedOffset + 1)
+        ->and($window['trackIds'][$window['index']])->toBe($ids[$index]);
+})->with([
+    'near the start' => [10, 0],
+    'in the middle' => [20000, 20000 - AudioPlayer::MAX_QUEUE / 2],
+    'near the end' => [AudioPlayer::MAX_QUEUE + 9999, 10000],
+]);
+
+it('loadQueue caps an oversized queue around the start track', function () {
+    $user = User::factory()->create();
+    $track = Track::factory()->create(['user_id' => $user->id, 'is_available' => true]);
+
+    // Unknown ids are padding; only the cap and the start track matter here.
+    $ids = range($track->id + 1, $track->id + AudioPlayer::MAX_QUEUE + 500);
+    $ids[AudioPlayer::MAX_QUEUE + 200] = $track->id;
+
+    Livewire::actingAs($user)
+        ->test(AudioPlayer::class)
+        ->call('loadQueue', $ids, AudioPlayer::MAX_QUEUE + 200)
+        ->assertSet('currentTrackId', $track->id)
+        ->assertSet('queue', [$track->id]);
+});

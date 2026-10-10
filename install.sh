@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
-# Rekodo Installer
+# SLUSH Installer
 # Detects and installs PHP 8.2+, Composer, Node.js, and npm, then runs the
 # app setup and optionally starts the dev server.
 #
@@ -226,7 +226,7 @@ check_npm() {
 # Main flow
 # ---------------------------------------------------------------------------
 
-print_header "Rekodo Installer"
+print_header "SLUSH Installer"
 
 detect_os
 

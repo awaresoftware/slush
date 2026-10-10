@@ -844,6 +844,12 @@ describe('desktop queue dock', function () {
             // The gutter has to be declared or the rule resolves to an invalid value.
             ->and($css)->toContain('--queue-gutter: 22.5rem');
     });
+
+    it('runs the docked panels to the bottom once the bar moves aside', function () {
+        $player = file_get_contents(base_path('resources/views/livewire/audio-player.blade.php'));
+
+        expect(substr_count($player, 'lg:bottom-[72px] xl:bottom-0'))->toBe(2);
+    });
 });
 
 describe('expanded now playing', function () {
@@ -966,4 +972,15 @@ describe('expanded now playing', function () {
 
         expect($component->instance()->hasUpcoming)->toBeTrue();
     });
+});
+
+it('starts the next track on ended without waiting for the server', function () {
+    $js = file_get_contents(dirname(__DIR__, 2).'/resources/js/app.js');
+    $player = file_get_contents(dirname(__DIR__, 2).'/resources/views/livewire/audio-player.blade.php');
+
+    // Same element, not a second one: iOS only keeps a locked-screen session
+    // alive on the element the user started.
+    expect($player)->toContain("route('stream.track', ['track' => '__track__'])")
+        ->and($js)->toContain("audio.src = streamUrlTemplate.replace('__track__', nextId);")
+        ->and($js)->toContain('const alreadyLoaded = this._advancing && !audio.error');
 });

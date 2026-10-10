@@ -50,7 +50,7 @@ test('album show: unavailable track row does NOT have x-on:click play-track', fu
     expect($html)->toContain('opacity-50');
 });
 
-test('library index: available track row has x-on:click with play-track dispatch', function () {
+test('library index: available track row has x-on:click calling playFrom', function () {
     $user = User::factory()->create();
 
     Track::factory()->create([
@@ -63,7 +63,7 @@ test('library index: available track row has x-on:click with play-track dispatch
         ->test('pages::library.index')
         ->html();
 
-    expect($html)->toContain('play-track');
+    expect($html)->toContain('$wire.playFrom(');
     expect($html)->toContain('cursor-pointer');
 });
 

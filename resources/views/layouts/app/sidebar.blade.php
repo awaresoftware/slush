@@ -101,39 +101,27 @@
                 $tabs = [
                     ['route' => 'dashboard', 'active' => request()->routeIs('dashboard'), 'icon' => 'home', 'label' => __('Home')],
                     ['route' => 'library.index', 'active' => request()->routeIs('library.*'), 'icon' => 'musical-note', 'label' => __('Library')],
-                    ['action' => 'open-command-palette', 'icon' => 'magnifying-glass', 'label' => __('Search')],
+                    ['route' => 'search', 'active' => request()->routeIs('search'), 'icon' => 'magnifying-glass', 'label' => __('Search')],
                     ['route' => 'playlists.index', 'active' => request()->routeIs('playlists.*'), 'icon' => 'queue-list', 'label' => __('Playlists')],
                     ['route' => 'profile.edit', 'active' => request()->is('settings*'), 'icon' => 'cog-6-tooth', 'label' => __('Settings')],
                 ];
             @endphp
 
             @foreach ($tabs as $tab)
-                @if (isset($tab['action']))
-                    <button
-                        type="button"
-                        x-data
-                        x-on:click="$dispatch('{{ $tab['action'] }}')"
-                        class="flex flex-1 flex-col items-center gap-0.5 py-2 text-base-content/65"
-                    >
-                        <x-mary-icon :name="'o-' . $tab['icon']" class="size-6" />
-                        <span class="text-[0.625rem] leading-none">{{ $tab['label'] }}</span>
-                    </button>
-                @else
-                    @php($active = $tab['active'])
-                    <a
-                        href="{{ route($tab['route']) }}"
-                        wire:navigate
-                        @if ($active) aria-current="page" @endif
-                        @class([
-                            'flex flex-1 flex-col items-center gap-0.5 py-2',
-                            'text-primary' => $active,
-                            'text-base-content/65' => ! $active,
-                        ])
-                    >
-                        <x-mary-icon :name="($active ? 's-' : 'o-') . $tab['icon']" class="size-6" />
-                        <span class="text-[0.625rem] leading-none">{{ $tab['label'] }}</span>
-                    </a>
-                @endif
+                @php($active = $tab['active'])
+                <a
+                    href="{{ route($tab['route']) }}"
+                    wire:navigate
+                    @if ($active) aria-current="page" @endif
+                    @class([
+                        'flex flex-1 flex-col items-center gap-0.5 py-2',
+                        'text-primary' => $active,
+                        'text-base-content/65' => ! $active,
+                    ])
+                >
+                    <x-mary-icon :name="($active ? 's-' : 'o-') . $tab['icon']" class="size-6" />
+                    <span class="text-[0.625rem] leading-none">{{ $tab['label'] }}</span>
+                </a>
             @endforeach
         </nav>
 

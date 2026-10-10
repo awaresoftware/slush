@@ -59,6 +59,12 @@ class AudioPlayer extends Component
     private const QUEUE_WINDOW = 50;
 
     /**
+     * Most tracks one queue load may hold. Keeps the ownership whereIn under
+     * SQLite's 32,766 bound-parameter limit and the Livewire snapshot small.
+     */
+    public const MAX_QUEUE = 30000;
+
+    /**
      * Strings the Alpine player needs for the queue toasts, which fire outside
      * any Blade view that could translate them itself.
      *
@@ -113,6 +119,8 @@ class AudioPlayer extends Component
      */
     public function loadQueue(array $trackIds, int $startIndex = 0): void
     {
+        ['trackIds' => $trackIds, 'index' => $startIndex] = self::windowAround($trackIds, $startIndex);
+
         // Reset shuffle state on every new queue load.
         $this->isShuffled = false;
         $this->originalQueue = [];
@@ -122,9 +130,10 @@ class AudioPlayer extends Component
             ->where('is_available', true)
             ->whereIn('id', $trackIds)
             ->pluck('id')
-            ->all();
+            ->flip();
 
-        $this->queue = array_values(array_filter($trackIds, fn ($id) => in_array($id, $ownedIds)));
+        // Keyed lookup: a whole-library queue is thousands of ids, in_array would be quadratic.
+        $this->queue = array_values(array_filter($trackIds, fn ($id) => $ownedIds->has($id)));
 
         if (empty($this->queue)) {
             return;
@@ -136,6 +145,21 @@ class AudioPlayer extends Component
         $track = Track::with('album')->findOrFail($this->currentTrackId);
 
         $this->dispatch('player:load', ...$this->trackPayload($track, autoplay: true, queueIndex: $startIndex));
+    }
+
+    /**
+     * Cut an oversized id list down to MAX_QUEUE ids centred on the given
+     * index, so the chosen track always stays in the queue.
+     *
+     * @param  list<int>  $ids
+     * @return array{trackIds: list<int>, index: int}
+     */
+    public static function windowAround(array $ids, int $index): array
+    {
+        $ids = array_values($ids);
+        $offset = max(0, min($index - intdiv(self::MAX_QUEUE, 2), count($ids) - self::MAX_QUEUE));
+
+        return ['trackIds' => array_slice($ids, $offset, self::MAX_QUEUE), 'index' => $index - $offset];
     }
 
     /**
