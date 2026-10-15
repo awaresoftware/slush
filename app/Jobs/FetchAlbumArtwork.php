@@ -41,7 +41,7 @@ class FetchAlbumArtwork implements ShouldBeUnique, ShouldQueue
 
     private const COVER_ART_ENDPOINT = 'https://coverartarchive.org/release-group/';
 
-    private const USER_AGENT = 'erik-rekodo/1.0 ( https://github.com/erik-rekodo )';
+    private const USER_AGENT = 'foonk/1.0 ( https://github.com/awaresoftware/foonk )';
 
     /**
      * The one-second token that keeps concurrent jobs inside MusicBrainz's rate

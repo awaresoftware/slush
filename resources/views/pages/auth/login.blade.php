@@ -3,7 +3,7 @@
 @section('title', 'Log in')
 
 @section('content')
-    <x-auth-heading title="Welcome back" subtitle="Sign in to your Rekodo account" />
+    <x-auth-heading title="Welcome back" subtitle="Sign in to your Foonk account" />
 
     {{-- Session Status --}}
     @if (session('status'))

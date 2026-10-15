@@ -24,7 +24,7 @@ class ArtworkSearch
 
     private const DEEZER_ENDPOINT = 'https://api.deezer.com/search/album';
 
-    private const USER_AGENT = 'erik-rekodo/1.0 ( https://github.com/erik-rekodo )';
+    private const USER_AGENT = 'foonk/1.0 ( https://github.com/awaresoftware/foonk )';
 
     private const CACHE_TTL_SECONDS = 86400;
 

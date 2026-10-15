@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# SLUSH Windows Installer
+# FOONK Windows Installer
 # Detects and installs PHP 8.2+, Composer, Node.js, and npm via Chocolatey,
 # then runs the app setup and optionally starts the dev server.
 #
@@ -180,7 +180,7 @@ function Check-Npm {
 # Main flow
 # ---------------------------------------------------------------------------
 
-Write-Header "SLUSH Installer"
+Write-Header "FOONK Installer"
 Write-Header "Checking dependencies..."
 
 Check-Php

@@ -224,7 +224,7 @@ Artisan::command(
             return 0;
         }
 
-        $buckets = (int) config('rekodo.waveform.buckets', 200);
+        $buckets = (int) config('foonk.waveform.buckets', 200);
         $bar = $this->output->createProgressBar($tracks->count());
         $bar->start();
 

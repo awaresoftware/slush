@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cookie;
 
 enum Theme: string
 {
-    public const COOKIE = 'rekodo_appearance_theme';
+    public const COOKIE = 'foonk_appearance_theme';
 
     case System = 'system';
     case Porcelain = 'porcelain';

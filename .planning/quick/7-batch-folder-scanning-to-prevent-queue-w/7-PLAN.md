@@ -6,7 +6,7 @@ wave: 1
 depends_on: []
 files_modified:
   - database/migrations/YYYY_add_scan_progress_to_linked_folders_table.php
-  - config/rekodo.php
+  - config/foonk.php
   - .env.example
   - app/Models/LinkedFolder.php
   - app/Jobs/ScanLinkedFolder.php
@@ -25,7 +25,7 @@ must_haves:
     - "UI shows batch progress during scanning (e.g. '2,000 / 6,000 tracks processed')"
     - "Batch size defaults to 200 and is configurable via SCAN_BATCH_SIZE env var"
   artifacts:
-    - path: "config/rekodo.php"
+    - path: "config/foonk.php"
       provides: "Application-specific config with scan_batch_size"
       contains: "scan_batch_size"
     - path: "app/Jobs/ScanLinkedFolder.php"
@@ -35,9 +35,9 @@ must_haves:
       provides: "scanned_count and total_count columns"
   key_links:
     - from: "app/Jobs/ScanLinkedFolder.php"
-      to: "config/rekodo.php"
-      via: "config('rekodo.scan_batch_size')"
-      pattern: "config\\('rekodo\\.scan_batch_size'"
+      to: "config/foonk.php"
+      via: "config('foonk.scan_batch_size')"
+      pattern: "config\\('foonk\\.scan_batch_size'"
     - from: "app/Jobs/ScanLinkedFolder.php"
       to: "app/Models/LinkedFolder.php"
       via: "folder->update scanned_count/total_count"
@@ -107,7 +107,7 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
   <name>Task 1: Add progress columns, config, and refactor ScanLinkedFolder to batch dispatching</name>
   <files>
     database/migrations/YYYY_add_scan_progress_to_linked_folders_table.php
-    config/rekodo.php
+    config/foonk.php
     .env.example
     app/Models/LinkedFolder.php
     database/factories/LinkedFolderFactory.php
@@ -120,7 +120,7 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
 
     2. **Run migration**: `php artisan migrate --no-interaction`
 
-    3. **Create config/rekodo.php** with application-specific config:
+    3. **Create config/foonk.php** with application-specific config:
        ```php
        return [
            'scan_batch_size' => (int) env('SCAN_BATCH_SIZE', 200),
@@ -143,7 +143,7 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
           - Set `total_count` on the folder: `$this->folder->update(['status' => FolderStatus::Scanning, 'total_count' => count($files), 'scanned_count' => 0])`
 
        b. **Chunked processing phase**:
-          - `$batchSize = config('rekodo.scan_batch_size', 200);`
+          - `$batchSize = config('foonk.scan_batch_size', 200);`
           - `$chunks = array_chunk($files, $batchSize);`
           - Loop over `$chunks`:
             - For each chunk, run the existing per-file logic (path-check, hash-check, create-or-update Track, dispatch ExtractAudioMetadata)
@@ -176,7 +176,7 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
   </verify>
   <done>
     - Migration creates scanned_count + total_count columns
-    - Config file exists at config/rekodo.php with scan_batch_size
+    - Config file exists at config/foonk.php with scan_batch_size
     - ScanLinkedFolder processes files in chunks, updates scanned_count after each batch
     - All existing ScanLinkedFolderTest tests pass (no regressions)
   </done>
@@ -209,7 +209,7 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
 
        a. `test('processes files in configurable batch size', ...)`:
           - Create a temp dir with 5 audio files
-          - Set `config(['rekodo.scan_batch_size' => 2])`
+          - Set `config(['foonk.scan_batch_size' => 2])`
           - Run `(new ScanLinkedFolder($folder))->handle()`
           - Assert all 5 tracks created, all 5 ExtractAudioMetadata dispatched
           - Assert `$folder->fresh()->scanned_count` equals 5
@@ -254,11 +254,11 @@ Livewire component (anonymous, resources/views/pages/settings/⚡linked-folders.
 - `php artisan test --compact --filter="ScanLinkedFolderTest|LinkedFoldersSettingsTest"` — all tests pass
 - `vendor/bin/pint --dirty` — no formatting issues
 - `php artisan migrate:status` — scan progress migration applied
-- Config value accessible: `php artisan tinker --execute="echo config('rekodo.scan_batch_size');"` returns 200
+- Config value accessible: `php artisan tinker --execute="echo config('foonk.scan_batch_size');"` returns 200
 </verification>
 
 <success_criteria>
-- ScanLinkedFolder chunks file dispatching into batches of config('rekodo.scan_batch_size') (default 200)
+- ScanLinkedFolder chunks file dispatching into batches of config('foonk.scan_batch_size') (default 200)
 - Memory references released between batches (unset chunk arrays)
 - LinkedFolder.scanned_count and total_count updated after each batch
 - UI shows "Scanning: X / Y" progress during scan with 3s polling

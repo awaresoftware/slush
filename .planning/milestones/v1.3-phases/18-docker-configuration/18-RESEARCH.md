@@ -457,7 +457,7 @@ APP_URL=http://localhost
 DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
-DB_DATABASE=rekodo
+DB_DATABASE=foonk
 DB_USERNAME=sail
 DB_PASSWORD=password
 

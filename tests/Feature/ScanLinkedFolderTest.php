@@ -61,13 +61,13 @@ test('creates track records for each supported audio format', function () {
 });
 
 test('defaults to the documented audio extensions', function () {
-    expect(config('rekodo.audio_extensions'))->toBe(['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg']);
+    expect(config('foonk.audio_extensions'))->toBe(['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg']);
 });
 
 test('honours a configured audio extension list', function () {
     Queue::fake();
 
-    config(['rekodo.audio_extensions' => ['mp3']]);
+    config(['foonk.audio_extensions' => ['mp3']]);
 
     $folder = LinkedFolder::factory()->create(['path' => $this->tmpDir]);
     createAudioFile($this->tmpDir, 'song.mp3');
@@ -288,7 +288,7 @@ test('processes files in configurable batch size', function () {
         createAudioFile($this->tmpDir, $filename);
     }
 
-    config(['rekodo.scan_batch_size' => 2]);
+    config(['foonk.scan_batch_size' => 2]);
 
     (new ScanLinkedFolder($folder))->handle();
 
@@ -307,7 +307,7 @@ test('updates scanned_count progressively during processing', function () {
         createAudioFile($this->tmpDir, $filename);
     }
 
-    config(['rekodo.scan_batch_size' => 2]);
+    config(['foonk.scan_batch_size' => 2]);
 
     (new ScanLinkedFolder($folder))->handle();
 

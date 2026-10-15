@@ -25,7 +25,7 @@ re_verification: false
 | 4  | A Docker user can find step-by-step Docker install instructions in the README    | VERIFIED   | `## Docker` at line 137; Sail commands, `.env.docker.example` (not .env.example) |
 | 5  | A Docker user sees a prominent warning about container paths vs host paths       | VERIFIED   | `> [!IMPORTANT]` at line 158; host vs container path table with examples  |
 | 6  | A contributor can find development setup and PR guidelines in CONTRIBUTING.md    | VERIFIED   | All sections present: Dev Setup, Tech Stack, Tests, Code Style, PR Guidelines |
-| 7  | The repository has a LICENSE file with MIT text                                  | VERIFIED   | LICENSE exists; "MIT License" + "Copyright (c) 2026 Rekodo Contributors"  |
+| 7  | The repository has a LICENSE file with MIT text                                  | VERIFIED   | LICENSE exists; "MIT License" + "Copyright (c) 2026 Foonk Contributors"  |
 
 **Score:** 7/7 truths verified
 
@@ -36,7 +36,7 @@ re_verification: false
 | `README.md`      | Project intro and per-OS install guides   | VERIFIED   | 202 lines; 4 platform H2s confirmed by grep count=4; all sections present       |
 | `README.md`      | Docker container path caveat              | VERIFIED   | `[!IMPORTANT]` admonition at line 158 with host vs container path table         |
 | `CONTRIBUTING.md`| Developer setup and contribution guidelines | VERIFIED | `composer run dev` at line 24; all required sections present                    |
-| `LICENSE`        | MIT license text                          | VERIFIED   | "MIT License" on line 1; "Copyright (c) 2026 Rekodo Contributors" on line 3     |
+| `LICENSE`        | MIT license text                          | VERIFIED   | "MIT License" on line 1; "Copyright (c) 2026 Foonk Contributors" on line 3     |
 
 ### Key Link Verification
 

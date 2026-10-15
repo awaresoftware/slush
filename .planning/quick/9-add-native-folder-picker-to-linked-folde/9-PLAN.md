@@ -151,7 +151,7 @@ public string $newFolderPath = '';
 6. Run `vendor/bin/pint --dirty` after all changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/BrowseDirectoriesTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/BrowseDirectoriesTest.php</automated>
   </verify>
   <done>BrowseDirectoriesController returns JSON directory listings, route is registered with auth middleware, all tests pass including auth guard, valid paths, invalid paths, and hidden dir exclusion.</done>
 </task>
@@ -229,7 +229,7 @@ public string $newFolderPath = '';
 8. Run `vendor/bin/pint --dirty` after changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/BrowseDirectoriesTest.php && grep -q "openBrowser" resources/views/pages/settings/⚡linked-folders.blade.php && grep -q "fetchDirectories" resources/views/pages/settings/⚡linked-folders.blade.php && grep -q "browse-directories" resources/views/pages/settings/⚡linked-folders.blade.php && echo "PASS" || echo "FAIL"</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/BrowseDirectoriesTest.php && grep -q "openBrowser" resources/views/pages/settings/⚡linked-folders.blade.php && grep -q "fetchDirectories" resources/views/pages/settings/⚡linked-folders.blade.php && grep -q "browse-directories" resources/views/pages/settings/⚡linked-folders.blade.php && echo "PASS" || echo "FAIL"</automated>
   </verify>
   <done>Both path inputs (add form and update path modal) have a "Browse" button. Clicking opens a modal that fetches and displays directories from the server. Users can navigate into subdirectories, go up to parent, and click "Select this folder" to populate the corresponding Livewire path property.</done>
 </task>

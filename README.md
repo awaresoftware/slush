@@ -1,4 +1,4 @@
-# SLUSH
+# FOONK
 
 ![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white) ![Livewire](https://img.shields.io/badge/Livewire-4-FB70A9?style=flat&logo=livewire&logoColor=white) ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 
@@ -21,8 +21,8 @@ Choose your platform below. Each guide takes you from a fresh clone to a running
 ## macOS
 
 ```bash
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 ./install.sh
 ```
 
@@ -48,8 +48,8 @@ curl http://localhost:8000/healthz
 **Prerequisites:** PHP 8.2+, Composer, Node.js 18+
 
 ```bash
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 composer run setup
 composer run dev
 ```
@@ -59,8 +59,8 @@ composer run dev
 ## Linux
 
 ```bash
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 ./install.sh
 ```
 
@@ -88,8 +88,8 @@ curl http://localhost:8000/healthz
 **Prerequisites:** PHP 8.2+, Composer, Node.js 18+
 
 ```bash
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 composer run setup
 composer run dev
 ```
@@ -99,8 +99,8 @@ composer run dev
 ## Windows
 
 ```
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 install.bat
 ```
 
@@ -126,8 +126,8 @@ curl http://localhost:8000/healthz
 **Prerequisites:** PHP 8.2+, Composer, Node.js 18+ (install via Chocolatey, Scoop, or Laravel Herd)
 
 ```
-git https://github.com/awaresoftware/slush.git
-cd slush
+git https://github.com/awaresoftware/foonk.git
+cd foonk
 composer run setup
 composer run dev
 ```
@@ -139,8 +139,8 @@ composer run dev
 **Prerequisites:** Docker Desktop (or Docker Engine + Compose on Linux).
 
 ```bash
-git clone https://github.com/awaresoftware/slush.git
-cd slush
+git clone https://github.com/awaresoftware/foonk.git
+cd foonk
 cp .env.docker.example .env
 ./vendor/bin/sail up -d
 ```

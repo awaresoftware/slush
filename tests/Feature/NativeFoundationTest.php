@@ -5,7 +5,7 @@ describe('Native Foundation Setup', function () {
     describe('APP_KEY conditional generation logic', function () {
 
         it('returns truthy when APP_KEY is already set to a base64 value', function () {
-            $envContent = "APP_NAME=rekodo\nAPP_KEY=base64:abc123defGHI=\nAPP_DEBUG=false\n";
+            $envContent = "APP_NAME=foonk\nAPP_KEY=base64:abc123defGHI=\nAPP_DEBUG=false\n";
 
             $result = preg_match('/^APP_KEY=base64:/m', $envContent);
 
@@ -13,7 +13,7 @@ describe('Native Foundation Setup', function () {
         });
 
         it('returns falsy when APP_KEY is empty', function () {
-            $envContent = "APP_NAME=rekodo\nAPP_KEY=\nAPP_DEBUG=false\n";
+            $envContent = "APP_NAME=foonk\nAPP_KEY=\nAPP_DEBUG=false\n";
 
             $result = preg_match('/^APP_KEY=base64:/m', $envContent);
 

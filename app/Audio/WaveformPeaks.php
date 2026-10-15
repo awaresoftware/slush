@@ -85,8 +85,8 @@ class WaveformPeaks
             return null;
         }
 
-        $buckets ??= (int) config('rekodo.waveform.buckets', 200);
-        $sampleRate = (int) config('rekodo.waveform.sample_rate', 8000);
+        $buckets ??= (int) config('foonk.waveform.buckets', 200);
+        $sampleRate = (int) config('foonk.waveform.sample_rate', 8000);
 
         $duration ??= self::probeDuration($absolutePath);
 
@@ -203,7 +203,7 @@ class WaveformPeaks
      */
     private static function binary(string $key): string
     {
-        $path = (string) config('rekodo.waveform.'.$key, 'ffmpeg');
+        $path = (string) config('foonk.waveform.'.$key, 'ffmpeg');
 
         return $path !== '' ? $path : 'ffmpeg';
     }

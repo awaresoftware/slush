@@ -63,6 +63,6 @@ None - plan executed exactly as written.
 
 ## Self-Check: PASSED
 
-- `/Users/defou/Herd/rekodo/resources/views/pages/library/album-show.blade.php` — FOUND (modified)
-- `/Users/defou/Herd/rekodo/tests/Feature/AlbumShowTest.php` — FOUND (modified, 3 tests)
+- `/Users/defou/Herd/foonk/resources/views/pages/library/album-show.blade.php` — FOUND (modified)
+- `/Users/defou/Herd/foonk/tests/Feature/AlbumShowTest.php` — FOUND (modified, 3 tests)
 - Commit `078322f` — FOUND

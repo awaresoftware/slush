@@ -90,7 +90,7 @@ test('sends the identifying User-Agent MusicBrainz requires', function () {
 
     (new FetchAlbumArtwork(albumWithoutArt()))->handle();
 
-    Http::assertSent(fn ($request) => str_contains($request->header('User-Agent')[0] ?? '', 'erik-rekodo'));
+    Http::assertSent(fn ($request) => str_contains($request->header('User-Agent')[0] ?? '', 'foonk'));
 });
 
 test('skips albums whose artwork was set manually', function () {

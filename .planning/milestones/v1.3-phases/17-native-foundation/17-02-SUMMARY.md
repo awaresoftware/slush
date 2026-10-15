@@ -76,9 +76,9 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `/Users/defou/Herd/rekodo/bin/detect-port.php` — Port detection script with findFreePort(), URL printer, concurrently spawner
-- `/Users/defou/Herd/rekodo/tests/Unit/DetectPortTest.php` — 3 Pest unit tests for findFreePort
-- `/Users/defou/Herd/rekodo/composer.json` — dev script updated (by Plan 01 commit 43ba438)
+- `/Users/defou/Herd/foonk/bin/detect-port.php` — Port detection script with findFreePort(), URL printer, concurrently spawner
+- `/Users/defou/Herd/foonk/tests/Unit/DetectPortTest.php` — 3 Pest unit tests for findFreePort
+- `/Users/defou/Herd/foonk/composer.json` — dev script updated (by Plan 01 commit 43ba438)
 
 ## Decisions Made
 

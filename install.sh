@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
-# SLUSH Installer
+# FOONK Installer
 # Detects and installs PHP 8.2+, Composer, Node.js, and npm, then runs the
 # app setup and optionally starts the dev server.
 #
@@ -226,7 +226,7 @@ check_npm() {
 # Main flow
 # ---------------------------------------------------------------------------
 
-print_header "SLUSH Installer"
+print_header "FOONK Installer"
 
 detect_os
 

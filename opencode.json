@@ -18,7 +18,7 @@
                 "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
             ],
             "environment": {
-                "SITE_PATH": "/Users/defou/Herd/rekodo"
+                "SITE_PATH": "/Users/defou/Herd/foonk"
             }
         }
     }

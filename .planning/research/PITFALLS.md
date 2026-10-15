@@ -300,7 +300,7 @@ A simple HTTP 200 check validates the web server, not the application. Any stati
 ### Pitfall 11: WSL2 Path Translation — Windows Users Cannot Use Their Native Music Library Path
 
 **What goes wrong:**
-A Windows user's music library is at `C:\Users\alice\Music`. Docker Desktop on Windows uses WSL2 as its backend. The correct Docker bind-mount source path is `/mnt/c/Users/alice/Music` (WSL2 format) or `C:/Users/alice/Music` (Docker Desktop translates Windows drive paths with forward slashes). If the user enters `C:\Users\alice\Music` in the Rekodo linked-folder UI (which is the natural Windows path), the database stores it, the container cannot find it, and scanning fails.
+A Windows user's music library is at `C:\Users\alice\Music`. Docker Desktop on Windows uses WSL2 as its backend. The correct Docker bind-mount source path is `/mnt/c/Users/alice/Music` (WSL2 format) or `C:/Users/alice/Music` (Docker Desktop translates Windows drive paths with forward slashes). If the user enters `C:\Users\alice\Music` in the Foonk linked-folder UI (which is the natural Windows path), the database stores it, the container cannot find it, and scanning fails.
 
 **Why it happens:**
 The path normalisation in `LinkedFolder::path()` already converts backslashes to forward slashes (`C:/Users/alice/Music`), but `C:/Users/alice/Music` is still a Windows path — it does not map to `/mnt/c/Users/alice/Music` inside the container. There is a two-layer translation problem: path separator normalisation is solved, but drive-letter-to-mount-point translation is not.
@@ -426,5 +426,5 @@ Running `php artisan config:cache` during install writes the current `DB_CONNECT
 
 ---
 
-*Pitfalls research for: Easy Installation (cross-platform scripts + Docker support) — rekodo v1.3*
+*Pitfalls research for: Easy Installation (cross-platform scripts + Docker support) — foonk v1.3*
 *Researched: 2026-03-26*

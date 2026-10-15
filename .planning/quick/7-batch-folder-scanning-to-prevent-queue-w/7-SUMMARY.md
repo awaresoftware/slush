@@ -8,11 +8,11 @@ dependency_graph:
   provides: [scan-progress-tracking, batch-scanning]
   affects: [linked-folders-settings-ui, scan-job]
 tech_stack:
-  added: [config/rekodo.php]
+  added: [config/foonk.php]
   patterns: [array_chunk batch processing, progressive progress updates]
 key_files:
   created:
-    - config/rekodo.php
+    - config/foonk.php
     - database/migrations/2026_03_19_222546_add_scan_progress_to_linked_folders_table.php
   modified:
     - app/Jobs/ScanLinkedFolder.php
@@ -42,7 +42,7 @@ metrics:
 
 | Task | Name | Commit | Key Files |
 |------|------|--------|-----------|
-| 1 | Add progress columns, config, and refactor ScanLinkedFolder to batch dispatching | 3040a7e | Migration, config/rekodo.php, ScanLinkedFolder.php, LinkedFolder model+factory |
+| 1 | Add progress columns, config, and refactor ScanLinkedFolder to batch dispatching | 3040a7e | Migration, config/foonk.php, ScanLinkedFolder.php, LinkedFolder model+factory |
 | 2 | UI progress display and tests for batching + progress | 629e8cd | linked-folders.blade.php, ScanLinkedFolderTest.php, LinkedFoldersSettingsTest.php |
 
 ## Changes Made
@@ -51,12 +51,12 @@ metrics:
 Added `scanned_count unsignedInteger default 0` and `total_count unsignedInteger default 0` columns to `linked_folders` after `unavailable_count`.
 
 ### Config
-Created `config/rekodo.php` with `scan_batch_size` driven by `SCAN_BATCH_SIZE` env var (default 200). Added env var to `.env.example`.
+Created `config/foonk.php` with `scan_batch_size` driven by `SCAN_BATCH_SIZE` env var (default 200). Added env var to `.env.example`.
 
 ### ScanLinkedFolder Job
 Refactored `handle()` into three phases:
 1. **Discovery:** Iterates all files, collecting `{path, extension}` arrays (not SplFileInfo objects, avoids holding file handles). Sets `total_count` and `scanned_count = 0` on the folder before processing.
-2. **Chunked processing:** `array_chunk($files, config('rekodo.scan_batch_size', 200))` — per-chunk loop runs existing path/hash dedup logic and dispatches ExtractAudioMetadata. After each chunk: updates `scanned_count`, unsets chunk variable for GC. After all chunks: unsets `$files`.
+2. **Chunked processing:** `array_chunk($files, config('foonk.scan_batch_size', 200))` — per-chunk loop runs existing path/hash dedup logic and dispatches ExtractAudioMetadata. After each chunk: updates `scanned_count`, unsets chunk variable for GC. After all chunks: unsets `$files`.
 3. **Availability check + completion:** Unchanged availability loop, then final update sets `status = Active`, `scanned_count = total_count`, and `total_count`.
 
 ### UI Badge
@@ -73,7 +73,7 @@ None - plan executed exactly as written.
 
 ## Self-Check
 
-- [x] `config/rekodo.php` exists
+- [x] `config/foonk.php` exists
 - [x] Migration `2026_03_19_222546_add_scan_progress_to_linked_folders_table` applied (status: Ran)
 - [x] Commits 3040a7e and 629e8cd exist in git log
 - [x] 37 tests pass with no regressions

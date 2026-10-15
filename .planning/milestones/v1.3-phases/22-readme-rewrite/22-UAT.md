@@ -13,7 +13,7 @@ updated: 2026-03-29T00:05:00Z
 ## Tests
 
 ### 1. README Exists with Project Overview
-expected: Open README.md at the repository root. It should show the project name "Rekodo", badge icons (Laravel, Livewire, PHP, License), and a brief description of what the app does.
+expected: Open README.md at the repository root. It should show the project name "Foonk", badge icons (Laravel, Livewire, PHP, License), and a brief description of what the app does.
 result: pass
 
 ### 2. Per-OS Installation Sections
@@ -33,7 +33,7 @@ expected: CONTRIBUTING.md exists at the repository root. It covers: development 
 result: pass
 
 ### 6. MIT LICENSE File
-expected: LICENSE file exists at the repository root containing a standard MIT License with "2026 Rekodo Contributors" as the copyright holder.
+expected: LICENSE file exists at the repository root containing a standard MIT License with "2026 Foonk Contributors" as the copyright holder.
 result: pass
 
 ### 7. Cross-File Links

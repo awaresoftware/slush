@@ -82,7 +82,7 @@ new class extends Component
 
     <h2 class="sr-only">{{ __('Appearance Settings') }}</h2>
 
-    <x-pages::settings.layout :heading="__('Appearance')" :subheading="__('Choose how Rekodo looks on this account')">
+    <x-pages::settings.layout :heading="__('Appearance')" :subheading="__('Choose how Foonk looks on this account')">
         <div
             x-data="appearanceSettings()"
             x-on:appearance-failed.window="revert()"

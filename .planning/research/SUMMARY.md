@@ -1,13 +1,13 @@
 # Project Research Summary
 
-**Project:** rekodo — v1.3 Easy Installation
+**Project:** foonk — v1.3 Easy Installation
 **Domain:** Cross-platform installer and Docker/Sail setup for a self-hosted Laravel music streaming app
 **Researched:** 2026-03-26
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Rekodo v1.3 adds zero new Composer or npm dependencies. Everything needed — Laravel Sail (already in require-dev), concurrently (already in package.json), and the existing `composer run dev` script — is already present. The milestone is purely about configuration files, install scripts, and documentation: generating a `compose.yaml` via `sail:install`, writing `install.sh`/`install.ps1`, adding Makefile Docker targets, and rewriting the README with per-OS setup guides. The existing app code (StreamController, ScanLinkedFolder, ExtractAudioMetadata, BrowseDirectoriesController) requires no changes for Docker — it works correctly against `/music` container paths as long as the volume mount is configured correctly.
+Foonk v1.3 adds zero new Composer or npm dependencies. Everything needed — Laravel Sail (already in require-dev), concurrently (already in package.json), and the existing `composer run dev` script — is already present. The milestone is purely about configuration files, install scripts, and documentation: generating a `compose.yaml` via `sail:install`, writing `install.sh`/`install.ps1`, adding Makefile Docker targets, and rewriting the README with per-OS setup guides. The existing app code (StreamController, ScanLinkedFolder, ExtractAudioMetadata, BrowseDirectoriesController) requires no changes for Docker — it works correctly against `/music` container paths as long as the volume mount is configured correctly.
 
 The most architecturally significant decision is the two-environment split: SQLite + database queue for native installs, MySQL + Redis queue for Docker installs. This is driven by a concrete risk: two containers (web + worker) writing concurrently to the same bind-mounted SQLite file causes SQLITE_BUSY errors. The split is handled entirely through `.env` files — `.env.example` for native (SQLite defaults already present), `.env.docker.example` for Docker (MySQL + Redis). The Docker queue worker runs as a dedicated second service in `compose.yaml`, reusing the same `sail-8.4/app` image — not supervisord inside the main container.
 

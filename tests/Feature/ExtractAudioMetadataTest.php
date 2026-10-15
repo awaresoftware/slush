@@ -629,8 +629,8 @@ test('job leaves peaks null when the envelope cannot be built', function () {
 
     // A stub that emits nothing, so the job exercises its real code path
     // without needing a decodable fixture or an installed ffmpeg.
-    config()->set('rekodo.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
-    config()->set('rekodo.waveform.ffprobe_path', '/nonexistent/ffprobe');
+    config()->set('foonk.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
+    config()->set('foonk.waveform.ffprobe_path', '/nonexistent/ffprobe');
     WaveformPeaks::forgetProbe();
 
     (new ExtractAudioMetadata($track))->handle();
@@ -663,9 +663,9 @@ test('job stores the envelope it built as JSON on the track', function () {
     file_put_contents($ffprobe, "#!/bin/sh\necho 1\n");
     chmod($ffprobe, 0755);
 
-    config()->set('rekodo.waveform.buckets', 4);
-    config()->set('rekodo.waveform.ffmpeg_path', $ffmpeg);
-    config()->set('rekodo.waveform.ffprobe_path', $ffprobe);
+    config()->set('foonk.waveform.buckets', 4);
+    config()->set('foonk.waveform.ffmpeg_path', $ffmpeg);
+    config()->set('foonk.waveform.ffprobe_path', $ffprobe);
     WaveformPeaks::forgetProbe();
 
     (new ExtractAudioMetadata($track))->handle();

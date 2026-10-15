@@ -86,8 +86,8 @@ These are the exact commands and facts to document. All verified from source fil
 **Manual fallback steps (for `<details>` block):**
 ```bash
 # Prerequisites: PHP 8.2+, Composer, Node.js
-git clone <repo-url> rekodo
-cd rekodo
+git clone <repo-url> foonk
+cd foonk
 composer run setup
 composer run dev
 ```
@@ -109,8 +109,8 @@ composer run dev
 **Manual fallback steps (for `<details>` block):**
 ```powershell
 # Prerequisites: PHP 8.2+, Composer, Node.js (via Chocolatey or Herd)
-git clone <repo-url> rekodo
-cd rekodo
+git clone <repo-url> foonk
+cd foonk
 composer run setup
 composer run dev
 ```
@@ -193,7 +193,7 @@ HTTP 200 on success, 503 on DB failure. 3-second DB timeout. No authentication r
 
 ```
 README.md
-├── H1: Rekodo
+├── H1: Foonk
 │   ├── Shields.io badges (Laravel, Livewire, PHP 8.2+, MIT License)
 │   └── One-liner description
 ├── Feature highlights (bullet list)

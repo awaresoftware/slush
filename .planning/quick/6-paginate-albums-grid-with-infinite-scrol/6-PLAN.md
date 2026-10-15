@@ -277,7 +277,7 @@ Track model fields: id, user_id, album_id, title, artist, file_path, file_hash, 
 Run `vendor/bin/pint --dirty` after all changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php -l resources/views/pages/library/index.blade.php && vendor/bin/pint --dirty</automated>
+    <automated>cd /Users/defou/Herd/foonk && php -l resources/views/pages/library/index.blade.php && vendor/bin/pint --dirty</automated>
   </verify>
   <done>
     - x-show replaced with template x-if for all 3 tabs
@@ -336,7 +336,7 @@ All tests use `Livewire::actingAs($user)->test('pages::library.index')` pattern 
 Run `vendor/bin/pint --dirty` on all test files.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/Library/LibrarySearchTest.php tests/Feature/Library/LibraryAlbumsPaginationTest.php tests/Feature/Library/LibraryArtistsTabTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/Library/LibrarySearchTest.php tests/Feature/Library/LibraryAlbumsPaginationTest.php tests/Feature/Library/LibraryArtistsTabTest.php</automated>
   </verify>
   <done>
     - Existing LibrarySearchTest album tests updated for loadedAlbums array (no longer computed)

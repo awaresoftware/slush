@@ -29,10 +29,10 @@ class ScanLinkedFolder implements ShouldQueue
     public function handle(): void
     {
         try {
-            // Read once, not per file: config/rekodo.php is the single source of
+            // Read once, not per file: config/foonk.php is the single source of
             // truth for what counts as audio, and a lookup inside the loop would
             // cost one call per file across a library of any real size.
-            $extensions = config('rekodo.audio_extensions');
+            $extensions = config('foonk.audio_extensions');
 
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($this->folder->path, \RecursiveDirectoryIterator::SKIP_DOTS)
@@ -72,7 +72,7 @@ class ScanLinkedFolder implements ShouldQueue
                 'scanned_count' => 0,
             ]);
 
-            $batchSize = config('rekodo.scan_batch_size', 200);
+            $batchSize = config('foonk.scan_batch_size', 200);
             $chunks = array_chunk($files, $batchSize);
             $processedSoFar = 0;
 

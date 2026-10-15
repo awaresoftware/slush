@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Honour X-Forwarded-* from the sapolski nginx proxy that terminates
-        // TLS for rekodo.loncarek.net; without this the app builds http:// URLs
+        // TLS for foonk.loncarek.net; without this the app builds http:// URLs
         // for requests that arrived over https.
         $middleware->trustProxies(at: [
             '192.168.13.126',

@@ -1,4 +1,4 @@
-# Roadmap: Rekodo
+# Roadmap: Foonk
 
 ## Milestones
 

@@ -25,7 +25,7 @@ test('linkFolder creates a linked folder and dispatches scan job', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $tmpDir = sys_get_temp_dir().'/rekodo-test-'.uniqid();
+    $tmpDir = sys_get_temp_dir().'/foonk-test-'.uniqid();
     mkdir($tmpDir);
 
     Livewire::test('pages::settings.linked-folders')
@@ -142,8 +142,8 @@ test('bulk path update replaces prefix on all tracks in folder', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $oldDir = sys_get_temp_dir().'/rekodo-old-'.uniqid();
-    $newDir = sys_get_temp_dir().'/rekodo-new-'.uniqid();
+    $oldDir = sys_get_temp_dir().'/foonk-old-'.uniqid();
+    $newDir = sys_get_temp_dir().'/foonk-new-'.uniqid();
     mkdir($oldDir);
     mkdir($newDir);
 
@@ -181,8 +181,8 @@ test('bulk path update sets is_available based on file_exists at new path', func
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $oldDir = sys_get_temp_dir().'/rekodo-old-'.uniqid();
-    $newDir = sys_get_temp_dir().'/rekodo-new-'.uniqid();
+    $oldDir = sys_get_temp_dir().'/foonk-old-'.uniqid();
+    $newDir = sys_get_temp_dir().'/foonk-new-'.uniqid();
     mkdir($oldDir);
     mkdir($newDir);
 
@@ -226,7 +226,7 @@ test('bulk path update with invalid directory shows error', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $oldDir = sys_get_temp_dir().'/rekodo-old-'.uniqid();
+    $oldDir = sys_get_temp_dir().'/foonk-old-'.uniqid();
     mkdir($oldDir);
 
     $folder = LinkedFolder::factory()->create([
@@ -249,8 +249,8 @@ test('bulk path update updates the folder own path', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $oldDir = sys_get_temp_dir().'/rekodo-old-'.uniqid();
-    $newDir = sys_get_temp_dir().'/rekodo-new-'.uniqid();
+    $oldDir = sys_get_temp_dir().'/foonk-old-'.uniqid();
+    $newDir = sys_get_temp_dir().'/foonk-new-'.uniqid();
     mkdir($oldDir);
     mkdir($newDir);
 

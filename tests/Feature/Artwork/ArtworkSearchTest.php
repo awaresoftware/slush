@@ -151,7 +151,7 @@ test('both providers send the identifying User-Agent', function () {
     (new ArtworkSearch)->itunes('Justified');
     (new ArtworkSearch)->deezer('Justified');
 
-    Http::assertSent(fn ($request) => str_contains($request->header('User-Agent')[0] ?? '', 'erik-rekodo'));
+    Http::assertSent(fn ($request) => str_contains($request->header('User-Agent')[0] ?? '', 'foonk'));
 });
 
 test('two identical searches make one request and a changed query makes another', function () {

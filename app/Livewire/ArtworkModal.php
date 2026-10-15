@@ -30,7 +30,7 @@ class ArtworkModal extends Component
     /**
      * Matches the identifying User-Agent the automatic backfill sends.
      */
-    private const USER_AGENT = 'erik-rekodo/1.0 ( https://github.com/erik-rekodo )';
+    private const USER_AGENT = 'foonk/1.0 ( https://github.com/awaresoftware/foonk )';
 
     public bool $showModal = false;
 

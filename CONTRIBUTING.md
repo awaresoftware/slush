@@ -1,6 +1,6 @@
-# Contributing to Slush
+# Contributing to Foonk
 
-Thanks for considering contributing to Slush! This document covers development setup, coding conventions, and pull request guidelines.
+Thanks for considering contributing to Foonk! This document covers development setup, coding conventions, and pull request guidelines.
 
 ## Development Setup
 

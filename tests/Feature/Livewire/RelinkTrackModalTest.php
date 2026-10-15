@@ -10,7 +10,7 @@ test('opening modal loads track old path', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $tmpDir = sys_get_temp_dir().'/rekodo-folder-'.uniqid();
+    $tmpDir = sys_get_temp_dir().'/foonk-folder-'.uniqid();
     mkdir($tmpDir);
     $tmpFile = $tmpDir.'/song.mp3';
     file_put_contents($tmpFile, 'audio content');
@@ -37,7 +37,7 @@ test('relink with valid existing file path updates track and sets is_available t
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $tmpDir = sys_get_temp_dir().'/rekodo-folder-'.uniqid();
+    $tmpDir = sys_get_temp_dir().'/foonk-folder-'.uniqid();
     mkdir($tmpDir);
     $tmpFile = $tmpDir.'/song.mp3';
     file_put_contents($tmpFile, 'audio content unique '.uniqid());
@@ -88,7 +88,7 @@ test('relink with different hash shows mismatch warning', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $tmpDir = sys_get_temp_dir().'/rekodo-folder-'.uniqid();
+    $tmpDir = sys_get_temp_dir().'/foonk-folder-'.uniqid();
     mkdir($tmpDir);
     $tmpFile = $tmpDir.'/song.mp3';
     file_put_contents($tmpFile, 'different audio content '.uniqid());
@@ -117,7 +117,7 @@ test('relink with different hash allows confirm and proceed', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $tmpDir = sys_get_temp_dir().'/rekodo-folder-'.uniqid();
+    $tmpDir = sys_get_temp_dir().'/foonk-folder-'.uniqid();
     mkdir($tmpDir);
     $tmpFile = $tmpDir.'/song.mp3';
     file_put_contents($tmpFile, 'different audio content '.uniqid());
@@ -166,8 +166,8 @@ test('relink to path in different linked folder updates linked_folder_id', funct
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $folderADir = sys_get_temp_dir().'/rekodo-folder-a-'.uniqid();
-    $folderBDir = sys_get_temp_dir().'/rekodo-folder-b-'.uniqid();
+    $folderADir = sys_get_temp_dir().'/foonk-folder-a-'.uniqid();
+    $folderBDir = sys_get_temp_dir().'/foonk-folder-b-'.uniqid();
     mkdir($folderADir);
     mkdir($folderBDir);
 
@@ -203,8 +203,8 @@ test('relink to path outside all linked folders shows validation error', functio
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $folderDir = sys_get_temp_dir().'/rekodo-folder-'.uniqid();
-    $outsideDir = sys_get_temp_dir().'/rekodo-outside-'.uniqid();
+    $folderDir = sys_get_temp_dir().'/foonk-folder-'.uniqid();
+    $outsideDir = sys_get_temp_dir().'/foonk-outside-'.uniqid();
     mkdir($folderDir);
     mkdir($outsideDir);
 

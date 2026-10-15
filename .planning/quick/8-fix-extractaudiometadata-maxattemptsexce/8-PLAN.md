@@ -78,7 +78,7 @@ Output: Both jobs have explicit retry/timeout config, queue driver retry_after i
 Run `vendor/bin/pint --dirty` after changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && grep -q 'tries = 3' app/Jobs/ExtractAudioMetadata.php && grep -q 'timeout = 120' app/Jobs/ExtractAudioMetadata.php && grep -q 'tries = 3' app/Jobs/ScanLinkedFolder.php && grep -q 'timeout = 600' app/Jobs/ScanLinkedFolder.php && grep -q '300' config/queue.php && echo "PASS" || echo "FAIL"</automated>
+    <automated>cd /Users/defou/Herd/foonk && grep -q 'tries = 3' app/Jobs/ExtractAudioMetadata.php && grep -q 'timeout = 120' app/Jobs/ExtractAudioMetadata.php && grep -q 'tries = 3' app/Jobs/ScanLinkedFolder.php && grep -q 'timeout = 600' app/Jobs/ScanLinkedFolder.php && grep -q '300' config/queue.php && echo "PASS" || echo "FAIL"</automated>
   </verify>
   <done>Both jobs have $tries=3 and appropriate $timeout values. Database queue retry_after is 300s.</done>
 </task>
@@ -126,7 +126,7 @@ Run `vendor/bin/pint --dirty` after changes.
 Run `vendor/bin/pint --dirty` after changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/ExtractAudioMetadataTest.php tests/Feature/ScanLinkedFolderTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/ExtractAudioMetadataTest.php tests/Feature/ScanLinkedFolderTest.php</automated>
   </verify>
   <done>All existing tests still pass. New tests confirm $tries and $timeout properties are correctly set on both jobs.</done>
 </task>

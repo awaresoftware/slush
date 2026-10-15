@@ -74,7 +74,7 @@ The app currently defaults to SQLite (`DB_CONNECTION=sqlite`). This works for na
 | Variable | Native | Docker |
 |----------|--------|--------|
 | `DB_CONNECTION` | `sqlite` | `mysql` |
-| `DB_DATABASE` | *(default: database/database.sqlite)* | `rekodo` |
+| `DB_DATABASE` | *(default: database/database.sqlite)* | `foonk` |
 | `DB_HOST` | *(not set)* | `mysql` |
 | `QUEUE_CONNECTION` | `database` | `redis` |
 | `REDIS_HOST` | *(not set)* | `redis` |
@@ -411,5 +411,5 @@ Alternatively, `.env.docker.example` is a complete file that mirrors `.env.examp
 
 ---
 
-*Architecture research for: v1.3 Easy Installation — Rekodo*
+*Architecture research for: v1.3 Easy Installation — Foonk*
 *Researched: 2026-03-26*

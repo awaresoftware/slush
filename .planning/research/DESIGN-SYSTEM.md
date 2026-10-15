@@ -1,4 +1,4 @@
-# Design System — Rekodo
+# Design System — Foonk
 
 > Catppuccin Frappé palette · Monospace typography · Solid surfaces with visible borders · v0.1.0
 

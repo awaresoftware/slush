@@ -3,7 +3,7 @@
 @section('title', 'Create account')
 
 @section('content')
-    <x-auth-heading title="Create your account" subtitle="Set up Rekodo to start streaming your library" />
+    <x-auth-heading title="Create your account" subtitle="Set up Foonk to start streaming your library" />
 
     <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-5">
         @csrf

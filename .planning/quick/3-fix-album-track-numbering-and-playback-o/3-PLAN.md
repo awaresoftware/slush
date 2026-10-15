@@ -128,7 +128,7 @@ Run `vendor/bin/pint --dirty` to fix formatting.
 Run `php artisan test --compact tests/Feature/AlbumShowTest.php` to verify all tests pass.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/AlbumShowTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/AlbumShowTest.php</automated>
   </verify>
   <done>
     - All existing album show tests still pass

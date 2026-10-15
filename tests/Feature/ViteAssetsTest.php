@@ -46,19 +46,19 @@ afterEach(function (): void {
 test('a request from another host falls back to the built assets', function () {
     User::factory()->create();
 
-    $html = renderLoginFor('rekodo.aware.hr', 'https://erik.rekodo.test:5174');
+    $html = renderLoginFor('foonk.aware.hr', 'https://foonk.test:5174');
 
     expect($html)->toContain('/build/assets/')
-        ->and($html)->not->toContain('erik.rekodo.test:5174');
+        ->and($html)->not->toContain('foonk.test:5174');
 });
 
 test('a request from the dev server host keeps hot reloading', function () {
     User::factory()->create();
 
-    $html = renderLoginFor('erik.rekodo.test', 'https://erik.rekodo.test:5174');
+    $html = renderLoginFor('foonk.test', 'https://foonk.test:5174');
 
-    expect($html)->toContain('erik.rekodo.test:5174/@vite/client')
-        ->and($html)->toContain('erik.rekodo.test:5174/resources/css/app.css');
+    expect($html)->toContain('foonk.test:5174/@vite/client')
+        ->and($html)->toContain('foonk.test:5174/resources/css/app.css');
 });
 
 test('a loopback client on a different host still falls back to built assets', function () {
@@ -66,16 +66,16 @@ test('a loopback client on a different host still falls back to built assets', f
 
     // A tunnel or port forward on this machine also arrives from 127.0.0.1,
     // so a loopback client proves nothing about whether the dev host resolves.
-    $html = renderLoginFor('localhost:8000', 'https://erik.rekodo.test:5174', '127.0.0.1');
+    $html = renderLoginFor('localhost:8000', 'https://foonk.test:5174', '127.0.0.1');
 
     expect($html)->toContain('/build/assets/')
-        ->and($html)->not->toContain('erik.rekodo.test:5174');
+        ->and($html)->not->toContain('foonk.test:5174');
 });
 
 test('an unparseable hot file falls back to the built assets', function () {
     User::factory()->create();
 
-    $html = renderLoginFor('erik.rekodo.test', 'not-a-url');
+    $html = renderLoginFor('foonk.test', 'not-a-url');
 
     expect($html)->toContain('/build/assets/')
         ->and($html)->not->toContain('not-a-url');
@@ -84,7 +84,7 @@ test('an unparseable hot file falls back to the built assets', function () {
 test('an absent hot file uses the built assets', function () {
     User::factory()->create();
 
-    $html = renderLoginFor('erik.rekodo.test', null);
+    $html = renderLoginFor('foonk.test', null);
 
     expect($html)->toContain('/build/assets/');
 });
@@ -94,11 +94,11 @@ test('asset tags never point at a host other than the one serving the request', 
 
     // The ambient public/hot on a developer machine points at the Herd domain.
     // Whichever host serves the request, assets must resolve against that host.
-    $html = renderLoginFor('rekodo.aware.hr', 'https://erik.rekodo.test:5174');
+    $html = renderLoginFor('foonk.aware.hr', 'https://foonk.test:5174');
 
     preg_match_all('#(?:href|src)="(https?://[^/"]+)#', $html, $matches);
 
     foreach (array_unique($matches[1]) as $origin) {
-        expect(parse_url($origin, PHP_URL_HOST))->toBe('rekodo.aware.hr');
+        expect(parse_url($origin, PHP_URL_HOST))->toBe('foonk.aware.hr');
     }
 });

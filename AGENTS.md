@@ -1,4 +1,4 @@
-# Slush — agent notes
+# Foonk — agent notes
 
 Self-hosted music streaming server. Laravel 13 + Livewire 4 + Mary UI (daisyUI) + Tailwind 4, Pest 4, SQLite natively / MySQL+Redis under Docker. README covers install and user-facing config; this file covers what an agent gets wrong.
 
@@ -8,7 +8,7 @@ The `laravel-boost-guidelines` block at the bottom of this file is written by `p
 
 ## Run commands natively, not through Sail
 
-The generated Boost guidelines say every command must be prefixed with `vendor/bin/sail`. That is stale for this checkout: Docker is not running, `boost.json` still has `"sail": true`, and the app is developed natively (`composer run dev`, Herd at `https://slush.test`, SQLite). Use:
+The generated Boost guidelines say every command must be prefixed with `vendor/bin/sail`. That is stale for this checkout: Docker is not running, `boost.json` still has `"sail": true`, and the app is developed natively (`composer run dev`, Herd at `https://foonk.test`, SQLite). Use:
 
 ```bash
 php artisan <cmd>            # not vendor/bin/sail artisan
@@ -25,7 +25,7 @@ php artisan test --compact                                   # ~25s, ~765 tests
 php artisan test --compact tests/Feature/Library/TrackUploadTest.php
 php artisan test --compact --filter=testName
 vendor/bin/pint --dirty                                       # format only what you touched
-curl http://localhost:8000/healthz                            # or https://slush.test/healthz
+curl http://localhost:8000/healthz                            # or https://foonk.test/healthz
 ```
 
 `composer run test` (and `composer run test:lint`) currently **fails on a clean checkout**: pint 1.30.5 wants `fully_qualified_strict_types` / `single_blank_line_at_eof` / `not_operator_with_successor_space` on ~20 committed files. Not your change. Use `vendor/bin/pint --dirty` and `php artisan test`.
@@ -43,7 +43,7 @@ Tests that render `@vite` need `public/build/manifest.json`. If it is missing, r
 | Anonymous UI components | `resources/views/components/ui/*.blade.php`, used as `<x-ui.page-header>` |
 | Fortify auth pages | `resources/views/pages/auth/*.blade.php` — plain Blade, no component class |
 | Theme + accent CSS (4 custom daisyUI themes) | `resources/css/app.css` |
-| App config | `config/rekodo.php` (see legacy naming below) |
+| App config | `config/foonk.php` |
 | Custom console commands | `routes/console.php` (`albums:fetch-missing-artwork`, `albums:backfill-artwork`, `tracks:recompute-peaks`) |
 
 - The `⚡` prefix on page filenames is stripped by Livewire's finder, so `⚡index.blade.php` and `index.blade.php` resolve to the same `pages::<dir>.<name>`. Both spellings exist in the repo; either works.
@@ -53,20 +53,11 @@ Tests that render `@vite` need `public/build/manifest.json`. If it is missing, r
 ## Domain invariants
 
 - **Two track sources.** `SourceType::Uploaded` → relative path on the `public` disk (`music/{userId}/...`); `SourceType::Local` → an absolute path that must sit inside the owning `LinkedFolder`. `Track::absolutePath()` is a path *resolver*, not authorization. Anything serving the file (`StreamController`) must verify containment itself; the `stream` policy gate does not cover it.
-- `config/rekodo.php` → `audio_extensions` is the single source of truth for what a folder scan imports. `.m4p` is deliberately excluded (DRM'd iTunes files). Change it there, not in the job.
+- `config/foonk.php` → `audio_extensions` is the single source of truth for what a folder scan imports. `.m4p` is deliberately excluded (DRM'd iTunes files). Change it there, not in the job.
 - Jobs (`ScanLinkedFolder`, `ExtractAudioMetadata`, `FetchAlbumArtwork`) need `php artisan queue:listen` running or uploads will sit forever with no metadata. `composer run dev` starts it. Tests use `QUEUE_CONNECTION=sync`.
 - Waveform peaks need `ffmpeg`/`ffprobe` on PATH or `FFMPEG_PATH`/`FFPROBE_PATH`. When absent, extraction is skipped and the player falls back to a plain scrubber — nothing errors, nothing is half-written.
 - First registered user becomes admin; `/register` 404s once any user exists (`RequireNoUsers` middleware).
 - `ForcePasswordChange` middleware must detect Livewire via the `X-Livewire` header, never a URL path — see `.ai/rules/general.md` for the full reasoning and the required test shape.
-
-## Legacy "rekodo" naming (do not rename casually)
-
-The project was renamed to Slush; these identifiers were not, and changing them silently breaks users' cookies and pagination rendering:
-
-- `config/rekodo.php` and every `config('rekodo.*')` call
-- Theme/accent cookies: `rekodo_appearance_theme`, `rekodo_appearance_accent` (`app/Enums/Theme.php`, `Accent.php`)
-- Livewire pagination theme `rekodo` → `resources/views/vendor/livewire/rekodo.blade.php`, `simple-rekodo.blade.php`
-- Outbound artwork-search User-Agent `erik-rekodo/1.0`
 
 ## Tests
 

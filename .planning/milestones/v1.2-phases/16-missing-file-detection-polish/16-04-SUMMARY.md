@@ -68,7 +68,7 @@ php artisan test --compact --filter="RelinkTrackModal|LinkedFolders"
 
 **1. [Rule 1 - Bug] Existing RelinkTrackModal tests used flat temp files without linked folders**
 - **Found during:** Task 1
-- **Issue:** The existing tests created temp files at e.g. `/tmp/rekodo-testXXXX` but the new linked_folder_id lookup requires files to be inside a folder whose path matches a LinkedFolder record. All success-path tests were failing with the new validation.
+- **Issue:** The existing tests created temp files at e.g. `/tmp/foonk-testXXXX` but the new linked_folder_id lookup requires files to be inside a folder whose path matches a LinkedFolder record. All success-path tests were failing with the new validation.
 - **Fix:** Rewrote tests to create temp directories, place files inside them, and create matching LinkedFolder factory records.
 - **Files modified:** tests/Feature/Livewire/RelinkTrackModalTest.php
 - **Commit:** 6d0412e

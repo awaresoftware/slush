@@ -88,7 +88,7 @@ Each task was committed atomically:
 
 - `README.md` - Project intro with macOS, Linux, Windows, Docker installation guides; Getting Started, Configuration, Contributing, License sections
 - `CONTRIBUTING.md` - Development setup (composer run setup/dev), tech stack, tests (php artisan test --compact), code style (vendor/bin/pint --dirty), PR guidelines
-- `LICENSE` - MIT License with 2026 Rekodo Contributors copyright
+- `LICENSE` - MIT License with 2026 Foonk Contributors copyright
 
 ## Decisions Made
 

@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Project:** rekodo — Easy Installation (v1.3)
+**Project:** foonk — Easy Installation (v1.3)
 **Researched:** 2026-03-26
 **Confidence:** HIGH
 
@@ -307,5 +307,5 @@ composer run dev     # starts serve + queue:listen + vite concurrently
 - [Docker port conflict detection](https://oneuptime.com/blog/post/2026-01-16-docker-port-conflicts/view) — `lsof` and `netstat` approaches (MEDIUM confidence)
 
 ---
-*Stack research for: v1.3 Easy Installation (rekodo)*
+*Stack research for: v1.3 Easy Installation (foonk)*
 *Researched: 2026-03-26*

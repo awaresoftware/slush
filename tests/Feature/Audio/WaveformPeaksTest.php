@@ -50,8 +50,8 @@ function stubDecoders(?string $pcm = null, ?int $splitAt = null): object
     file_put_contents($ffprobe, "#!/bin/sh\nexit 0\n");
     chmod($ffprobe, 0755);
 
-    config()->set('rekodo.waveform.ffmpeg_path', $ffmpeg);
-    config()->set('rekodo.waveform.ffprobe_path', $ffprobe);
+    config()->set('foonk.waveform.ffmpeg_path', $ffmpeg);
+    config()->set('foonk.waveform.ffprobe_path', $ffprobe);
 
     return (object) [
         'dir' => $dir,
@@ -92,8 +92,8 @@ describe('availability probe', function () {
         // A path that cannot exist exits non-zero. This is the regression guard:
         // Process::run() returns an exit code, and 127 (command not found) is
         // truthy, so a naive `if ($process->run())` would claim ffmpeg exists.
-        config()->set('rekodo.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
-        config()->set('rekodo.waveform.ffprobe_path', '/nonexistent/ffprobe');
+        config()->set('foonk.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
+        config()->set('foonk.waveform.ffprobe_path', '/nonexistent/ffprobe');
 
         expect(WaveformPeaks::available())->toBeFalse();
     });
@@ -105,8 +105,8 @@ describe('availability probe', function () {
     });
 
     it('memoises the probe so it does not shell out per track', function () {
-        config()->set('rekodo.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
-        config()->set('rekodo.waveform.ffprobe_path', '/nonexistent/ffprobe');
+        config()->set('foonk.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
+        config()->set('foonk.waveform.ffprobe_path', '/nonexistent/ffprobe');
 
         expect(WaveformPeaks::available())->toBeFalse();
 
@@ -117,8 +117,8 @@ describe('availability probe', function () {
 
 describe('envelope extraction', function () {
     it('returns null when no decoder is available', function () {
-        config()->set('rekodo.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
-        config()->set('rekodo.waveform.ffprobe_path', '/nonexistent/ffprobe');
+        config()->set('foonk.waveform.ffmpeg_path', '/nonexistent/ffmpeg');
+        config()->set('foonk.waveform.ffprobe_path', '/nonexistent/ffprobe');
 
         $path = writeFixtureAudio(sys_get_temp_dir());
 
@@ -239,7 +239,7 @@ describe('envelope extraction', function () {
     });
 
     it('takes its bucket count and duration from config when not passed', function () {
-        config()->set('rekodo.waveform.buckets', 6);
+        config()->set('foonk.waveform.buckets', 6);
 
         $stubs = stubDecoders(pcm(array_fill(0, 8000, 16384)));
 

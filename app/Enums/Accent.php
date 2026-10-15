@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cookie;
 
 enum Accent: string
 {
-    public const COOKIE = 'rekodo_appearance_accent';
+    public const COOKIE = 'foonk_appearance_accent';
 
     case MusicRed = 'music-red';
     case Blue = 'blue';

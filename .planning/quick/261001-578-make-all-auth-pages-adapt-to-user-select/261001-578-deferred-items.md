@@ -21,7 +21,7 @@ change; not fixed here.
   shared global path. `sys_get_temp_dir()`/a per-run unique directory, or
   `storage_path()` / `storage_path('framework/testing/disks')`, would remove the
   cross-user collision. Separately, the stale root-owned file can be cleared with
-  `docker exec erikrekodo-laravel.test-1 rm -f /tmp/song.mp3`.
+  `docker exec erikfoonk-laravel.test-1 rm -f /tmp/song.mp3`.
 
 ## 2. Pre-existing suite noise
 

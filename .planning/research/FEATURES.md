@@ -181,7 +181,7 @@ Without `condition: service_healthy`, the app container starts before MySQL is r
 | Immich | `wget docker-compose.yml`, edit `.env`, `docker compose up -d` | Recommended over their experimental `curl | bash` installer |
 | Standard Laravel app | `composer install && php artisan serve` | Does not include queue worker or Vite — this project improves on this with `composer run dev` |
 
-**Key takeaway:** The simplest self-hosted Docker installs have two steps: (1) get the compose file, (2) edit `.env`, (3) run `docker compose up`. Rekodo should match this pattern.
+**Key takeaway:** The simplest self-hosted Docker installs have two steps: (1) get the compose file, (2) edit `.env`, (3) run `docker compose up`. Foonk should match this pattern.
 
 ---
 

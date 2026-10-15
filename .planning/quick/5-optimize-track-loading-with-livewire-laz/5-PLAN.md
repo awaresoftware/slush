@@ -225,7 +225,7 @@ The existing tests use `$this->tracks` computed property and `assertSee`. Since 
 Run `vendor/bin/pint --dirty` after all changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/Library/InfiniteScrollTest.php tests/Feature/Library/LibrarySearchTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/Library/InfiniteScrollTest.php tests/Feature/Library/LibrarySearchTest.php</automated>
   </verify>
   <done>
     - Library index loads only first 50 tracks on mount (not all 20k)
@@ -318,7 +318,7 @@ Add these test cases at the end of the file:
 Run `vendor/bin/pint --dirty` after all changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/AudioPlayer/AudioPlayerTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/AudioPlayer/AudioPlayerTest.php</automated>
   </verify>
   <done>
     - extendQueue appends owned+available tracks to queue without duplicates
@@ -389,7 +389,7 @@ Run `vendor/bin/pint --dirty` after all changes.
 Run `vendor/bin/pint --dirty` after all changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/Library/ tests/Feature/AudioPlayer/ tests/Feature/AlbumShowTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/Library/ tests/Feature/AudioPlayer/ tests/Feature/AlbumShowTest.php</automated>
   </verify>
   <done>
     - Album detail page uses simplePaginate(50) with DB-level sorting

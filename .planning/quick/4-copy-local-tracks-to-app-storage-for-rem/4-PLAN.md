@@ -128,7 +128,7 @@ Use `Js::from()` (Laravel's JavaScript encoder) instead of `@js()` inside attrib
 Run `vendor/bin/pint --dirty` after changes.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && grep -c "x-on:click.*play-track" resources/views/pages/library/album-show.blade.php resources/views/playlists/show.blade.php resources/views/pages/library/index.blade.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && grep -c "x-on:click.*play-track" resources/views/pages/library/album-show.blade.php resources/views/playlists/show.blade.php resources/views/pages/library/index.blade.php</automated>
   </verify>
   <done>All four track `<tr>` elements (1 in album-show, 1 in playlist show, 2 in library index) have x-on:click handlers that dispatch play-track with button/form guard. Available rows have cursor-pointer. Action buttons have max-sm:opacity-100 for mobile visibility.</done>
 </task>
@@ -181,7 +181,7 @@ Use existing model factories. Follow fake() convention from existing tests. Refe
 Run `vendor/bin/pint --dirty` after creating the test file.
   </action>
   <verify>
-    <automated>cd /Users/defou/Herd/rekodo && php artisan test --compact tests/Feature/MobileTouchPlaybackTest.php</automated>
+    <automated>cd /Users/defou/Herd/foonk && php artisan test --compact tests/Feature/MobileTouchPlaybackTest.php</automated>
   </verify>
   <done>All 6 tests pass, confirming: available track rows render with x-on:click play-track handlers and cursor-pointer class; unavailable track rows do not; action buttons have mobile visibility class.</done>
 </task>
